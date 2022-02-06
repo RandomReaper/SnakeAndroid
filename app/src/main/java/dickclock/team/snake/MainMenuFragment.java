@@ -1,13 +1,13 @@
 package dickclock.team.snake;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.fragment.app.Fragment;
-import dickclock.team.snake.R;
 
 /**
  * Fragment with the main menu for the game. The main menu allows the player
@@ -24,10 +24,14 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
     private View mShowAchievementsButton;
     private View mShowLeaderboardsButton;
     private View mShowFriendsButton;
+    private View mCheatCodeButton;
+    private int cheatNbr;
 
     interface Listener {
         // called when the user presses the `Easy` or `Okay` button; will pass in which via `hardMode`
-        void onStartGameRequested(MainActivity.level level);
+        void onStartGameRequested(Settings.level level);
+
+        void onShowSettingsRequested();
 
         // called when the user presses the `Show Achievements` button
         void onShowAchievementsRequested();
@@ -43,6 +47,8 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 
         // called when the user presses the `Friends` button
         void onShowFriendsButtonClicked();
+
+        void cheatCode();
     }
 
     private Listener mListener = null;
@@ -56,15 +62,19 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
         View view = inflater.inflate(R.layout.fragment_mainmenu, container, false);
 
         final int[] clickableIds = new int[]{
+                R.id.cheatButton,
                 R.id.easy_mode_button,
                 R.id.medium_mode_button,
                 R.id.hard_mode_button,
+                R.id.settings_button,
                 R.id.show_achievements_button,
                 R.id.show_leaderboards_button,
                 R.id.sign_in_button,
                 R.id.sign_out_button,
                 R.id.show_friends_button
         };
+
+        cheatNbr = 0;
 
         for (int clickableId : clickableIds) {
             view.findViewById(clickableId).setOnClickListener(this);
@@ -74,12 +84,17 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
         mShowAchievementsButton = view.findViewById(R.id.show_achievements_button);
         mShowLeaderboardsButton = view.findViewById(R.id.show_leaderboards_button);
         mShowFriendsButton = view.findViewById(R.id.show_friends_button);
+        mCheatCodeButton = view.findViewById(R.id.cheatButton);
 
         mGreetingTextView = view.findViewById(R.id.text_greeting);
         mSignInBarView = view.findViewById(R.id.sign_in_bar);
         mSignOutBarView = view.findViewById(R.id.sign_out_bar);
 
         updateUI();
+
+        // Set version name
+        TextView textVersion = view.findViewById(R.id.version);
+        textVersion.setText(BuildConfig.VERSION_NAME);
 
         return view;
     }
@@ -99,20 +114,31 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
         mShowLeaderboardsButton.setEnabled(!mShowSignInButton);
         mShowFriendsButton.setEnabled(!mShowSignInButton);
         mSignInBarView.setVisibility(mShowSignInButton ? View.VISIBLE : View.GONE);
-        mSignOutBarView.setVisibility(mShowSignInButton ? View.GONE : View.VISIBLE);
+        //mSignOutBarView.setVisibility(mShowSignInButton ? View.GONE : View.VISIBLE);
+        mSignOutBarView.setVisibility(View.GONE);
+        //mCheatCodeButton.setVisibility(View.INVISIBLE);
+        //mCheatCodeButton.setEnabled(true);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.cheatButton:
+                Log.i(MainActivity.TAG, "Cheat number: " + cheatNbr);
+                cheatNbr++;
+                if(cheatNbr >= Settings.nbrForCheatCode) { mListener.cheatCode();}
+                break;
             case R.id.easy_mode_button:
-                mListener.onStartGameRequested(MainActivity.level.EASY);
+                mListener.onStartGameRequested(Settings.level.EASY);
                 break;
             case R.id.medium_mode_button:
-                mListener.onStartGameRequested(MainActivity.level.MEDIUM);
+                mListener.onStartGameRequested(Settings.level.MEDIUM);
                 break;
             case R.id.hard_mode_button:
-                mListener.onStartGameRequested(MainActivity.level.HARD);
+                mListener.onStartGameRequested(Settings.level.HARD);
+                break;
+            case R.id.settings_button:
+                mListener.onShowSettingsRequested();
                 break;
             case R.id.show_achievements_button:
                 mListener.onShowAchievementsRequested();

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Google Play game services IDs. Save this file as res/values/games-ids.xml in your project.-->
+<resources>
+    <!--app_id-->
+    <string name="app_id" translatable="false">135371594606</string>
+    <!--package_name-->
+    <string name="package_name" translatable="false">dickclock.team.snake</string>
+    <!--achievement 10 Apples Easy mode-->
+    <string name="achievement_10_apples_easy_mode" translatable="false">CgkI7raapvgDEAIQBA</string>
+    <!--achievement 10 Apples Medium mode-->
+    <string name="achievement_10_apples_medium_mode" translatable="false">CgkI7raapvgDEAIQCw</string>
+    <!--achievement 10 Apples Hard mode-->
+    <string name="achievement_10_apples_hard_mode" translatable="false">CgkI7raapvgDEAIQDA</string>
+    <!--achievement 10% of the game board filled in easy mode-->
+    <string name="achievement_10_of_the_game_board_filled_in_easy_mode" translatable="false">CgkI7raapvgDEAIQDQ</string>
+    <!--achievement 10% of the game board filled in medium mode-->
+    <string name="achievement_10_of_the_game_board_filled_in_medium_mode" translatable="false">CgkI7raapvgDEAIQDg</string>
+    <!--achievement 10% of the game board filled in hard mode-->
+    <string name="achievement_10_of_the_game_board_filled_in_hard_mode" translatable="false">CgkI7raapvgDEAIQDw</string>
+    <!--leaderboard Easy High Scores-->
+    <string name="leaderboard_easy_high_scores" translatable="false">CgkI7raapvgDEAIQBQ</string>
+    <!--leaderboard Medium High Scores-->
+    <string name="leaderboard_medium_high_scores" translatable="false">CgkI7raapvgDEAIQBg</string>
+    <!--leaderboard Hard High Scores-->
+    <string name="leaderboard_hard_high_scores" translatable="false">CgkI7raapvgDEAIQBw</string>
+    <!--leaderboard Easy Performance-->
+    <string name="leaderboard_easy_performance" translatable="false">CgkI7raapvgDEAIQCA</string>
+    <!--leaderboard Medium Performance-->
+    <string name="leaderboard_medium_performance" translatable="false">CgkI7raapvgDEAIQCQ</string>
+    <!--leaderboard Hard Performance-->
+    <string name="leaderboard_hard_performance" translatable="false">CgkI7raapvgDEAIQCg</string>
+</resources>

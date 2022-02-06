@@ -1,10 +1,13 @@
 package dickclock.team.snake;
 
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -14,29 +17,29 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.games.AchievementsClient;
-import com.google.android.gms.games.AnnotatedData;
 import com.google.android.gms.games.EventsClient;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.LeaderboardsClient;
-import com.google.android.gms.games.Player;
 import com.google.android.gms.games.PlayersClient;
 import com.google.android.gms.games.event.Event;
 import com.google.android.gms.games.event.EventBuffer;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Objects;
 
 public class MainActivity extends FragmentActivity implements
         MainMenuFragment.Listener,
-        GameplayFragment.Callback,
-        WinFragment.Listener,
-        FriendsFragment.Listener {
+        EndFragment.Listener,
+        SettingsFragment.Listener,
+        FriendsFragment.Listener,
+        SensorEventListener {
 
     // Fragments
     private MainMenuFragment mMainMenuFragment;
-    private GameplayFragment mGameplayFragment;
-    private WinFragment mWinFragment;
+    private GameFragment mGameFragment;
+    private EndFragment mEndFragment;
+    public SettingsFragment mSettingsFragment;
     public FriendsFragment mFriendsFragment;
 
     // Client used to sign in with Google APIs
@@ -53,23 +56,32 @@ public class MainActivity extends FragmentActivity implements
     private static final int RC_SIGN_IN = 9001;
 
     // tag for debug logging
-    private static final String TAG = "DebugHER";
+    public static final String TAG = "DebugHER";
 
     // playing on hard mode?
-    public enum level {EASY, MEDIUM, HARD};
-    private level mLevel = level.EASY;
+    private Settings.level mLevel = Settings.level.EASY;
 
-    private boolean mHardMode = false;
-
-    // The diplay name of the signed in user.
+    // The display name of the signed in user.
     private String mDisplayName = "";
 
     // achievements and scores we're pending to push to the cloud
     // (waiting for the user to sign in, for instance)
     private final AccomplishmentsOutbox mOutbox = new AccomplishmentsOutbox();
 
+    public static MainActivity instance;
+
+    SensorManager sensorManager;
+    Sensor gravity;
+    public static float x, y, z;
+    private long previousTime = 0;
+    private boolean end = false;
+    Date currentTime;
+    long startTime;
+    public static boolean cheatCodeOn = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        instance = this;
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
@@ -80,14 +92,15 @@ public class MainActivity extends FragmentActivity implements
 
         // Create the fragments used by the UI.
         mMainMenuFragment = new MainMenuFragment();
-        mGameplayFragment = new GameplayFragment();
-        mWinFragment = new WinFragment();
+        mGameFragment = new GameFragment();
+        mEndFragment = new EndFragment();
+        mSettingsFragment = new SettingsFragment();
         mFriendsFragment = new FriendsFragment();
 
         // Set the listeners and callbacks of fragment events.
         mMainMenuFragment.setListener(this);
-        mGameplayFragment.setCallback(this);
-        mWinFragment.setListener(this);
+        mEndFragment.setListener(this);
+        mSettingsFragment.setListener(this);
         mFriendsFragment.setListener(this);
 
         // Add initial Main Menu fragment.
@@ -99,80 +112,33 @@ public class MainActivity extends FragmentActivity implements
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,
                 mMainMenuFragment).commit();
 
-        checkPlaceholderIds();
+        // Define the gravity sensor
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+
     }
 
-    // Check the sample to ensure all placeholder ids are are updated with real-world values.
-    // This is strictly for the purpose of the samples; you don't need this in a production
-    // application.
-    private void checkPlaceholderIds() {
-        StringBuilder problems = new StringBuilder();
-/*
-        if (getPackageName().startsWith("com.google.")) {
-            problems.append("- Package name start with com.google.*\n");
-        }
-
-        for (Integer id : new Integer[]{
-                R.string.app_id,
-                R.string.achievement_10_apples_ate,
-                R.string.leaderboard_easy_high_scores,
-                R.string.leaderboard_medium_high_scores,
-                R.string.leaderboard_hard_high_scores,
-        }) {
-
-            String value = getString(id);
-
-            if (value.startsWith("YOUR_")) {
-                // needs replacing
-                problems.append("- Placeholders(YOUR_*) in ids.xml need updating\n");
-                break;
-            }
-        }
-
- */
-
-        if (problems.length() > 0) {
-            problems.insert(0, "The following problems were found:\n\n");
-
-            problems.append("\nThese problems may prevent the app from working properly.");
-            problems.append("\n\nSee the TODO window in Android Studio for more information");
-            (new AlertDialog.Builder(this)).setMessage(problems.toString())
-                    .setNeutralButton(android.R.string.ok, null).create().show();
-        }
-    }
 
     private void loadAndPrintEvents() {
 
-        final MainActivity mainActivity = this;
+        mEventsClient.load(true).addOnSuccessListener(eventBufferAnnotatedData -> {
+            EventBuffer eventBuffer = eventBufferAnnotatedData.get();
 
-        mEventsClient.load(true)
-                .addOnSuccessListener(new OnSuccessListener<AnnotatedData<EventBuffer>>() {
-                    @Override
-                    public void onSuccess(AnnotatedData<EventBuffer> eventBufferAnnotatedData) {
-                        EventBuffer eventBuffer = eventBufferAnnotatedData.get();
+            int count = 0;
+            if (eventBuffer != null) {
+                count = eventBuffer.getCount();
+            }
 
-                        int count = 0;
-                        if (eventBuffer != null) {
-                            count = eventBuffer.getCount();
-                        }
+            Log.i(TAG, "number of events: " + count);
 
-                        Log.i(TAG, "number of events: " + count);
-
-                        for (int i = 0; i < count; i++) {
-                            Event event = eventBuffer.get(i);
-                            Log.i(TAG, "event: "
-                                    + event.getName()
-                                    + " -> "
-                                    + event.getValue());
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        handleException(e, getString(R.string.achievements_exception));
-                    }
-                });
+            for (int i = 0; i < count; i++) {
+                Event event = eventBuffer.get(i);
+                Log.i(TAG, "event: "
+                        + event.getName()
+                        + " -> "
+                        + event.getValue());
+            }
+        }).addOnFailureListener(e -> handleException(e, getString(R.string.achievements_exception)));
     }
 
     // Switch UI to the given fragment
@@ -181,24 +147,21 @@ public class MainActivity extends FragmentActivity implements
                 .commit();
     }
 
-    private boolean isSignedIn() {
-        return GoogleSignIn.getLastSignedInAccount(this) != null;
+    private boolean isNotSignedIn() {
+        return GoogleSignIn.getLastSignedInAccount(this) == null;
     }
 
     private void signInSilently() {
         Log.d(TAG, "signInSilently()");
 
         mGoogleSignInClient.silentSignIn().addOnCompleteListener(this,
-                new OnCompleteListener<GoogleSignInAccount>() {
-                    @Override
-                    public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "signInSilently(): success");
-                            onConnected(task.getResult());
-                        } else {
-                            Log.d(TAG, "signInSilently(): failure", task.getException());
-                            onDisconnected();
-                        }
+                task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "signInSilently(): success");
+                        onConnected(task.getResult());
+                    } else {
+                        //Log.d(TAG, "signInSilently(): failure", task.getException());
+                        onDisconnected();
                     }
                 });
     }
@@ -215,65 +178,56 @@ public class MainActivity extends FragmentActivity implements
         // Since the state of the signed in user can change when the activity is not active
         // it is recommended to try and sign in silently from when the app resumes.
         signInSilently();
+
+        sensorManager.registerListener((SensorEventListener) this, gravity, SensorManager.SENSOR_DELAY_UI);
     }
 
     private void signOut() {
         Log.d(TAG, "signOut()");
 
-        if (!isSignedIn()) {
+        if (isNotSignedIn()) {
             Log.w(TAG, "signOut() called, but was not signed in!");
             return;
         }
 
         mGoogleSignInClient.signOut().addOnCompleteListener(this,
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        boolean successful = task.isSuccessful();
-                        Log.d(TAG, "signOut(): " + (successful ? "success" : "failed"));
+                task -> {
+                    boolean successful = task.isSuccessful();
+                    Log.d(TAG, "signOut(): " + (successful ? "success" : "failed"));
 
-                        onDisconnected();
-                    }
+                    onDisconnected();
                 });
     }
 
     @Override
-    public void onStartGameRequested(level level) {
+    public void onStartGameRequested(Settings.level level) {
         startGame(level);
     }
 
     @Override
+    public void onShowSettingsRequested(){ switchToFragment(mSettingsFragment); }
+
+    @Override
+    public void cheatCode(){
+        cheatCodeOn = true;
+    }
+
+    @Override
     public void onShowAchievementsRequested() {
-        mAchievementsClient.getAchievementsIntent()
-                .addOnSuccessListener(new OnSuccessListener<Intent>() {
-                    @Override
-                    public void onSuccess(Intent intent) {
-                        startActivityForResult(intent, RC_UNUSED);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        handleException(e, getString(R.string.achievements_exception));
-                    }
-                });
+        mAchievementsClient.getAchievementsIntent().addOnSuccessListener(
+                intent -> startActivityForResult(intent, RC_UNUSED)
+        ).addOnFailureListener(
+                e -> handleException(e, getString(R.string.achievements_exception))
+        );
     }
 
     @Override
     public void onShowLeaderboardsRequested() {
-        mLeaderboardsClient.getAllLeaderboardsIntent()
-                .addOnSuccessListener(new OnSuccessListener<Intent>() {
-                    @Override
-                    public void onSuccess(Intent intent) {
-                        startActivityForResult(intent, RC_UNUSED);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        handleException(e, getString(R.string.leaderboards_exception));
-                    }
-                });
+        mLeaderboardsClient.getAllLeaderboardsIntent().addOnSuccessListener(
+                intent -> startActivityForResult(intent, RC_UNUSED)
+        ).addOnFailureListener(
+                e -> handleException(e, getString(R.string.leaderboards_exception))
+        );
     }
 
     private void handleException(Exception e, String details) {
@@ -293,27 +247,17 @@ public class MainActivity extends FragmentActivity implements
     }
 
 
-    private void startGame(level level) {
+    private void startGame(Settings.level level) {
         mLevel = level;
-        switchToFragment(mGameplayFragment);
+        startTime = currentTime.getTime();
+        switchToFragment(mGameFragment);
+        GameView.level = level;
     }
 
-    @Override
-    public void onEnteredScore(int requestedScore) {
-        int finalScore = 0;
-        switch (mLevel){
-            case EASY:
-                finalScore = requestedScore;
-                break;
-            case MEDIUM:
-                finalScore = requestedScore/2;
-                break;
-            case HARD:
-                finalScore = requestedScore/3;
-                break;
-        }
 
-        mWinFragment.setScore(finalScore);
+    public void onEnteredScore(int score) {
+
+        mEndFragment.setScore(score);
         String s = "";
         switch (mLevel){
             case EASY:
@@ -326,60 +270,108 @@ public class MainActivity extends FragmentActivity implements
                 s = getString(R.string.hard_mode_explanation);
                 break;
         }
-        mWinFragment.setExplanation(s);
+        mEndFragment.setExplanation(s);
 
         // check for achievements
-        checkForAchievements(requestedScore, finalScore);
+        checkForAchievements(score);
 
         // update leaderboards
-        updateLeaderboards(finalScore);
+        updateLeaderboards(score);
+        updateLeaderboardsPerformance(score,currentTime.getTime()-startTime);
 
         // push those accomplishments to the cloud, if signed in
         pushAccomplishments();
 
         // switch to the exciting "you won" screen
-        switchToFragment(mWinFragment);
+        switchToFragment(mEndFragment);
 
     }
 
-    // Checks if n is prime. We don't consider 0 and 1 to be prime.
-    // This is not an implementation we are mathematically proud of, but it gets the job done.
     private boolean up10Apple(int n) {
         return n >= 10;
+    }
+
+    private boolean p10board(int l, int x, int y){
+        return l > (x*y)/10;
     }
 
     /**
      * Check for achievements and unlock the appropriate ones.
      *
-     * @param requestedScore the score the user requested.
      * @param finalScore     the score the user got.
      */
-    private void checkForAchievements(int requestedScore, int finalScore) {
-        // Check if each condition is met; if so, unlock the corresponding
-        // achievement.
+    private void checkForAchievements(int finalScore) {
+        // Check if each condition is met; if so, unlock the corresponding achievement.
         if (up10Apple(finalScore)) {
-            mOutbox.m10AppleAchievement = true;
-            achievementToast(getString(R.string.achievement_10_apples_ate));
+            switch (mLevel){
+                case EASY:
+                    mOutbox.m10AppleEasyAchievement = true;
+                    break;
+                case MEDIUM:
+                    mOutbox.m10AppleMediumAchievement = true;
+                    break;
+                case HARD:
+                    mOutbox.m10AppleHardAchievement = true;
+                    break;
+            }
+            achievementToast(getString(R.string.achievement_10_apple_toast_text));
+        }
+
+        if (    p10board(GameFragment.snakeGame.snake.getLength(),
+                GameFragment.snakeGame.getBoard().length,
+                GameFragment.snakeGame.getBoard()[0].length))   {
+            switch (mLevel){
+                case EASY:
+                    mOutbox.p10BoardEasy = true;
+                    break;
+                case MEDIUM:
+                    mOutbox.p10BoardMedium = true;
+                    break;
+                case HARD:
+                    mOutbox.p10BoardHard = true;
+                    break;
+            }
+            achievementToast(getString(R.string.achievement_p10_board_toast_text));
         }
     }
 
     private void achievementToast(String achievement) {
         // Only show toast if not signed in. If signed in, the standard Google Play
         // toasts will appear, so we don't need to show our own.
-        if (!isSignedIn()) {
+        if (isNotSignedIn()) {
             Toast.makeText(this, getString(R.string.achievement) + ": " + achievement,
                     Toast.LENGTH_LONG).show();
         }
     }
 
     private void pushAccomplishments() {
-        if (!isSignedIn()) {
+        if (isNotSignedIn()) {
             // can't push to the cloud, try again later
             return;
         }
-        if (mOutbox.m10AppleAchievement) {
-            mAchievementsClient.unlock(getString(R.string.achievement_10_apples_ate));
-            mOutbox.m10AppleAchievement = false;
+        if (mOutbox.m10AppleEasyAchievement) {
+            mAchievementsClient.unlock(getString(R.string.achievement_10_apples_easy_mode));
+            mOutbox.m10AppleEasyAchievement = false;
+        }
+        if (mOutbox.m10AppleMediumAchievement) {
+            mAchievementsClient.unlock(getString(R.string.achievement_10_apples_medium_mode));
+            mOutbox.m10AppleMediumAchievement = false;
+        }
+        if (mOutbox.m10AppleHardAchievement) {
+            mAchievementsClient.unlock(getString(R.string.achievement_10_apples_hard_mode));
+            mOutbox.m10AppleHardAchievement = false;
+        }
+        if (mOutbox.p10BoardEasy) {
+            mAchievementsClient.unlock(getString(R.string.achievement_10_of_the_game_board_filled_in_easy_mode));
+            mOutbox.p10BoardEasy = false;
+        }
+        if (mOutbox.p10BoardMedium) {
+            mAchievementsClient.unlock(getString(R.string.achievement_10_of_the_game_board_filled_in_medium_mode));
+            mOutbox.p10BoardMedium = false;
+        }
+        if (mOutbox.p10BoardHard) {
+            mAchievementsClient.unlock(getString(R.string.achievement_10_of_the_game_board_filled_in_hard_mode));
+            mOutbox.p10BoardHard = false;
         }
         if (mOutbox.mEasyModeScore >= 0) {
             mLeaderboardsClient.submitScore(getString(R.string.leaderboard_easy_high_scores),
@@ -395,6 +387,21 @@ public class MainActivity extends FragmentActivity implements
             mLeaderboardsClient.submitScore(getString(R.string.leaderboard_hard_high_scores),
                     mOutbox.mHardModeScore);
             mOutbox.mHardModeScore = -1;
+        }
+        if (mOutbox.mEasyModePerformance >= 0) {
+            mLeaderboardsClient.submitScore(getString(R.string.leaderboard_easy_performance),
+                    mOutbox.mEasyModePerformance);
+            mOutbox.mEasyModePerformance = -1;
+        }
+        if (mOutbox.mMediumModePerformance >= 0) {
+            mLeaderboardsClient.submitScore(getString(R.string.leaderboard_medium_performance),
+                    mOutbox.mMediumModePerformance);
+            mOutbox.mMediumModePerformance = -1;
+        }
+        if (mOutbox.mHardModePerformance >= 0) {
+            mLeaderboardsClient.submitScore(getString(R.string.leaderboard_hard_performance),
+                    mOutbox.mHardModePerformance);
+            mOutbox.mHardModePerformance = -1;
         }
     }
 
@@ -412,24 +419,36 @@ public class MainActivity extends FragmentActivity implements
      * @param finalScore The score the user got.
      */
     private void updateLeaderboards(int finalScore) {
-        if (mLevel == level.HARD && mOutbox.mHardModeScore < finalScore) {
+        if (mLevel == Settings.level.HARD && mOutbox.mHardModeScore < finalScore) {
             mOutbox.mHardModeScore = finalScore;
-        } else if (mLevel == level.MEDIUM && mOutbox.mMediumModeScore < finalScore) {
+        } else if (mLevel == Settings.level.MEDIUM && mOutbox.mMediumModeScore < finalScore) {
             mOutbox.mMediumModeScore = finalScore;
-        } else if (mLevel == level.EASY && mOutbox.mEasyModeScore < finalScore) {
+        } else if (mLevel == Settings.level.EASY && mOutbox.mEasyModeScore < finalScore) {
             mOutbox.mEasyModeScore = finalScore;
         }
-/*
-        if (mHardMode && mOutbox.mHardModeScore < finalScore) {
-            mOutbox.mHardModeScore = finalScore;
-        } else if (!mHardMode && mOutbox.mEasyModeScore < finalScore) {
-            mOutbox.mEasyModeScore = finalScore;
+    }
+    private void updateLeaderboardsPerformance(int finalScore, long time) {
+        if (finalScore < 1){
+            return;
         }
- */
+        long score = (long) (time/(finalScore*1.1));
+        Log.i(TAG, "Performance: " + score);
+        if (mLevel == Settings.level.HARD && mOutbox.mHardModePerformance < score) {
+            mOutbox.mHardModePerformance = score;
+        } else if (mLevel == Settings.level.MEDIUM && mOutbox.mMediumModePerformance < score) {
+            mOutbox.mMediumModePerformance = score;
+        } else if (mLevel == Settings.level.EASY && mOutbox.mEasyModePerformance < score) {
+            mOutbox.mEasyModePerformance = score;
+        }
     }
 
     @Override
     public void onWinScreenDismissed() {
+        switchToFragment(mMainMenuFragment);
+    }
+
+    @Override
+    public void onSettingsScreenDismissed() {
         switchToFragment(mMainMenuFragment);
     }
 
@@ -471,24 +490,21 @@ public class MainActivity extends FragmentActivity implements
         mMainMenuFragment.setShowSignInButton(false);
 
         // Show "you are signed in" message on win screen, with no sign in button.
-        mWinFragment.setShowSignInButton(false);
+        mEndFragment.setShowSignInButton(false);
 
         // Set the greeting appropriately on main menu
         mPlayersClient.getCurrentPlayer()
-                .addOnCompleteListener(new OnCompleteListener<Player>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Player> task) {
-                        String displayName;
-                        if (task.isSuccessful()) {
-                            displayName = task.getResult().getDisplayName();
-                        } else {
-                            Exception e = task.getException();
-                            handleException(e, getString(R.string.players_exception));
-                            displayName = "???";
-                        }
-                        mDisplayName = displayName;
-                        mMainMenuFragment.setGreeting("Hello, " + displayName);
+                .addOnCompleteListener(task -> {
+                    String displayName;
+                    if (task.isSuccessful()) {
+                        displayName = Objects.requireNonNull(task.getResult()).getDisplayName();
+                    } else {
+                        Exception e = task.getException();
+                        handleException(e, getString(R.string.players_exception));
+                        displayName = "???";
                     }
+                    mDisplayName = displayName;
+                    mMainMenuFragment.setGreeting("Hello, " + displayName);
                 });
 
 
@@ -513,7 +529,7 @@ public class MainActivity extends FragmentActivity implements
         mMainMenuFragment.setShowSignInButton(true);
 
         // Show sign-in button on win screen
-        mWinFragment.setShowSignInButton(true);
+        mEndFragment.setShowSignInButton(true);
 
         mMainMenuFragment.setGreeting(getString(R.string.signed_out_greeting));
     }
@@ -538,15 +554,76 @@ public class MainActivity extends FragmentActivity implements
         switchToFragment(mMainMenuFragment);
     }
 
-    private class AccomplishmentsOutbox {
-        boolean m10AppleAchievement = false;
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if ((event.sensor.getType() == Sensor.TYPE_GRAVITY)) {
+            x = event.values[0];
+            y = event.values[1];
+            z = event.values[2];
+            x = ((int)(x*100))/100f;
+            y = ((int)(y*100))/100f;
+            z = ((int)(z*100))/100f;
+            currentTime = Calendar.getInstance().getTime();
+            try {
+                if (GameFragment.snakeGame.isInProgress()){
+                    end = false;
+
+                    long time = currentTime.getTime();
+                    if((time-previousTime) >= Settings.getTime(mLevel)){
+                        previousTime = time;
+                        GameFragment.playOneRound(Interface.getNextDir(x,y));
+                    }
+
+                } else if (!end){
+                    end = true;
+                    GameView.drawing = false;
+                    GameFragment.drawingView.invalidate();
+                    int score = GameFragment.snakeGame.getScore();
+                    Interface.putScoreTerminal(score);
+                    onEnteredScore(score);
+                    switchToFragment(mEndFragment);
+                    Log.i(TAG, "Time: " + (currentTime.getTime()-startTime));
+                }
+            } catch (Exception e) {e.printStackTrace();}
+
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+    private static class AccomplishmentsOutbox {
+        boolean m10AppleEasyAchievement = false;
+        boolean m10AppleMediumAchievement = false;
+        boolean m10AppleHardAchievement = false;
+        boolean p10BoardEasy = false;
+        boolean p10BoardMedium = false;
+        boolean p10BoardHard = false;
         int mEasyModeScore = -1;
         int mMediumModeScore = -1;
         int mHardModeScore = -1;
+        long mEasyModePerformance = -1;
+        long mMediumModePerformance = -1;
+        long mHardModePerformance = -1;
 
         boolean isEmpty() {
-            return !m10AppleAchievement && mEasyModeScore < 0 &&
-                    mMediumModeScore < 0 && mHardModeScore < 0;
+            boolean out;
+            out = !m10AppleEasyAchievement;
+            out = out && !m10AppleMediumAchievement;
+            out = out && !m10AppleHardAchievement;
+            out = out && !p10BoardEasy;
+            out = out && !p10BoardMedium;
+            out = out && !p10BoardHard;
+            out = out && mEasyModeScore < 0;
+            out = out && mMediumModeScore < 0;
+            out = out && mHardModeScore < 0;
+            out = out && mEasyModePerformance < 0;
+            out = out && mMediumModePerformance < 0;
+            out = out && mHardModePerformance < 0;
+
+            return out;
         }
 
     }

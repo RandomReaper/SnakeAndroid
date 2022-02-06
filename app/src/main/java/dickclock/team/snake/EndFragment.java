@@ -16,7 +16,7 @@ import dickclock.team.snake.R;
  *
  * @author Bruno Oliveira (Google)
  */
-public class WinFragment extends Fragment implements OnClickListener {
+public class EndFragment extends Fragment implements OnClickListener {
     private String mExplanation = "";
     private int mScore = 0;
     private boolean mShowSignIn = false;
@@ -89,7 +89,7 @@ public class WinFragment extends Fragment implements OnClickListener {
         mExplanationTextView.setText(mExplanation);
 
         mSignInBar.setVisibility(mShowSignIn ? View.VISIBLE : View.GONE);
-        mSignedInBar.setVisibility(mShowSignIn ? View.GONE : View.VISIBLE);
+        //mSignedInBar.setVisibility(mShowSignIn ? View.GONE : View.VISIBLE);
     }
 
     @Override

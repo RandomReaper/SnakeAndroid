@@ -13,8 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -26,9 +25,7 @@ import com.google.android.gms.games.AnnotatedData;
 import com.google.android.gms.games.Player;
 import com.google.android.gms.games.PlayerBuffer;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import dickclock.team.snake.R;
 
 import java.util.ArrayList;
 
@@ -42,16 +39,14 @@ public class FriendsFragment extends Fragment {
         void onBackButtonClicked();
     }
 
-    private View mView;
     private ListView mListView;
     private View mSpinner;
-    private ArrayAdapter<Player> mAdapter;
     private MainActivity mActivity;
     private ActivityResultLauncher<IntentSenderRequest> resolveLauncherFriendsConsent;
     private ActivityResultLauncher<Intent> resolveLauncherCompareProfile;
 
     private Listener mListener = null;
-    private OnCompleteListener<AnnotatedData<PlayerBuffer>> onCompleteListener =
+    private final OnCompleteListener<AnnotatedData<PlayerBuffer>> onCompleteListener =
             new OnCompleteListener<AnnotatedData<PlayerBuffer>>() {
                 @Override
                 public void onComplete(@NonNull Task<AnnotatedData<PlayerBuffer>> task) {
@@ -61,6 +56,7 @@ public class FriendsFragment extends Fragment {
                         }
                         PlayerBuffer playerBuffer = task.getResult().get();
                         try {
+                            assert playerBuffer != null;
                             if (DataBufferUtils.hasNextPage(playerBuffer)) {
                                 mActivity
                                         .getPlayersClient()
@@ -68,12 +64,13 @@ public class FriendsFragment extends Fragment {
                                         .addOnCompleteListener(mActivity, onCompleteListener);
                             } else {
                                 LayoutInflater inflater = LayoutInflater.from(getContext());
-                                mAdapter = getAdapter(playerBuffer, inflater);
+                                ArrayAdapter<Player> mAdapter = getAdapter(playerBuffer, inflater);
                                 mListView.setAdapter(mAdapter);
                                 mSpinner.setVisibility(View.GONE);
                                 mListView.setVisibility(View.VISIBLE);
                             }
                         } finally {
+                            assert playerBuffer != null;
                             playerBuffer.release();
                         }
                     } else {
@@ -95,41 +92,30 @@ public class FriendsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
-        mView = inflater.inflate(R.layout.friends_screen, container, /* attachToRoot= */ false);
+        /* attachToRoot= */
+        View mView = inflater.inflate(R.layout.friends_screen, container, /* attachToRoot= */ false);
         mListView = mView.findViewById(R.id.load_friends_game_list);
         mSpinner = mView.findViewById(R.id.progress_bar);
         mActivity = (MainActivity) getActivity();
-        mView
-                .findViewById(R.id.back_button)
-                .setOnClickListener(
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                mListener.onBackButtonClicked();
-                            }
-                        });
+        mView.findViewById(R.id.back_button).setOnClickListener(
+                view -> mListener.onBackButtonClicked()
+        );
         resolveLauncherFriendsConsent =
                 registerForActivityResult(
                         new ActivityResultContracts.StartIntentSenderForResult(),
-                        new ActivityResultCallback<ActivityResult>() {
-                            @Override
-                            public void onActivityResult(ActivityResult result) {
-                                if (result.getResultCode() == Activity.RESULT_OK) {
-                                    refreshFriends();
-                                } else {
-                                    mListener.onBackButtonClicked();
-                                }
+                        result -> {
+                            if (result.getResultCode() == Activity.RESULT_OK) {
+                                refreshFriends();
+                            } else {
+                                mListener.onBackButtonClicked();
                             }
                         });
         resolveLauncherCompareProfile =
                 registerForActivityResult(
                         new ActivityResultContracts.StartActivityForResult(),
-                        new ActivityResultCallback<ActivityResult>() {
-                            @Override
-                            public void onActivityResult(ActivityResult result) {
-                                if (result.getResultCode() == Activity.RESULT_OK) {
-                                    refreshFriends();
-                                }
+                        result -> {
+                            if (result.getResultCode() == Activity.RESULT_OK) {
+                                refreshFriends();
                             }
                         });
         refreshFriends();
@@ -150,29 +136,19 @@ public class FriendsFragment extends Fragment {
         return new ArrayAdapter<Player>(mActivity, R.layout.friends_row, players) {
             @Override
             public View getView(int position, View convertView, ViewGroup viewGroup) {
-                View rowView = inflater.inflate(R.layout.friends_row, viewGroup, /* attachToRoot= */ false);
+                View rowView = inflater.inflate(R.layout.friends_row, viewGroup, false);
                 final Player player = getItem(position);
                 TextView textView = rowView.findViewById(R.id.friend_name);
                 textView.setText(player.getDisplayName());
                 ImageButton showProfileButton = rowView.findViewById(R.id.show_profile);
                 showProfileButton.setOnClickListener(
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mActivity
-                                        .getPlayersClient()
-                                        .getCompareProfileIntentWithAlternativeNameHints(
-                                                player.getPlayerId(), player.getDisplayName(), mActivity.getDisplayName())
-                                        .addOnSuccessListener(
-                                                mActivity,
-                                                new OnSuccessListener<Intent>() {
-                                                    @Override
-                                                    public void onSuccess(Intent intent) {
-                                                        resolveLauncherCompareProfile.launch(intent);
-                                                    }
-                                                });
-                            }
-                        });
+                        v -> mActivity
+                                .getPlayersClient()
+                                .getCompareProfileIntentWithAlternativeNameHints(
+                                        player.getPlayerId(), player.getDisplayName(), mActivity.getDisplayName())
+                                .addOnSuccessListener(
+                                        mActivity,
+                                        intent -> resolveLauncherCompareProfile.launch(intent)));
                 return rowView;
             }
         };

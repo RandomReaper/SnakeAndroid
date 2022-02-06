@@ -1,96 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/screen_menu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/screen_menu"
-    android:gravity="center">
+    android:background="#00FFFFFF"
+    android:backgroundTint="#00FFFFFF"
+    android:foregroundTint="#00FFFFFF"
+    android:gravity="center"
+    android:orientation="vertical">
 
-    <TextView android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginBottom="10dp"
-        android:padding="20dp"
-        android:textColor="#ffffff"
-        android:background="#d54937" />
+    <Button
+        android:id="@+id/cheatButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:backgroundTint="#00FFFFFF"
+        tools:ignore="SpeakableTextPresentCheck" />
 
-    <LinearLayout android:orientation="vertical"
+    <TextView
+        android:id="@+id/version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
+        android:orientation="vertical"
         android:padding="20dp">
 
-        <TextView android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/text_greeting"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
             android:layout_marginBottom="10dp"
-            android:id="@+id/text_greeting" />
+            android:textSize="18sp" />
 
-        <TextView android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/choose_difficulty"
-            android:layout_marginBottom="20dp" />
+            android:layout_marginBottom="20dp"
+            android:text="@string/choose_difficulty" />
 
-        <LinearLayout android:orientation="horizontal"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="horizontal">
 
-            <Button android:id="@+id/easy_mode_button"
+            <Button
+                android:id="@+id/easy_mode_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/easy"
-                android:layout_marginEnd="20dp" />
+                android:layout_marginEnd="20dp"
+                android:text="@string/easy" />
 
-            <Button android:id="@+id/medium_mode_button"
+            <Button
+                android:id="@+id/medium_mode_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/medium"
-                android:layout_marginEnd="20dp" />
+                android:layout_marginEnd="20dp"
+                android:text="@string/medium" />
 
-            <Button android:id="@+id/hard_mode_button"
+            <Button
+                android:id="@+id/hard_mode_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/hard"
-                android:layout_marginEnd="20dp" />
+                android:text="@string/hard" />
 
         </LinearLayout>
 
-        <TextView android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/settings_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/see_your_progress"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp" />
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="@string/settings" />
 
-        <Button android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/show_achievements"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
-            android:id="@+id/show_achievements_button" />
+            android:text="@string/see_your_progress" />
 
-        <Button android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/show_achievements_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/show_leaderboards"
             android:layout_marginBottom="20dp"
-            android:id="@+id/show_leaderboards_button" />
+            android:text="@string/show_achievements" />
 
-        <Button android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/show_leaderboards_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/show_friends"
-            android:id="@+id/show_friends_button" />
+            android:layout_marginBottom="20dp"
+            android:text="@string/show_leaderboards" />
+
+        <Button
+            android:id="@+id/show_friends_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/show_friends" />
+
     </LinearLayout>
 
-    <LinearLayout android:id="@+id/sign_in_bar"
-        android:layout_height="120dp"
+    <LinearLayout
+        android:id="@+id/sign_in_bar"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="#f0f0f0"
-        android:layout_marginTop="30dp"
-        android:orientation="horizontal"
         android:gravity="center"
+        android:orientation="horizontal"
         android:padding="10dp">
 
         <com.google.android.gms.common.SignInButton
@@ -98,30 +122,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <TextView android:layout_width="0dp"
-            android:layout_weight="1"
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/sign_in_why"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:text="@string/sign_in_why"
             android:textColor="#808080" />
     </LinearLayout>
 
-    <LinearLayout android:id="@+id/sign_out_bar"
-        android:layout_height="120dp"
+    <LinearLayout
+        android:id="@+id/sign_out_bar"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="#f0f0f0"
-        android:layout_marginTop="30dp"
-        android:orientation="horizontal"
         android:gravity="center|end"
+        android:orientation="horizontal"
         android:padding="10dp">
 
-        <TextView android:layout_width="0dp"
-            android:layout_weight="1"
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/you_are_signed_in"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:text="@string/you_are_signed_in"
             android:textColor="#808080" />
 
         <Button
