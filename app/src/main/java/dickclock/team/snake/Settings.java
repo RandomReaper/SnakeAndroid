@@ -51,8 +51,8 @@ public class Settings extends MainActivity {
     private static final Interface.direction[] konamiList = new Interface.direction[8];
     private static int nbrDirOnList = 0;
     private static Interface.direction prevDir = Interface.direction.NOCHANGE;
-
-    public static void addKonami(Interface.direction dir){ //TODO rainbow drawing
+    public static int[] rainbow = new int[]{Color.RED, 0xFFFF7F00, Color.YELLOW, Color.GREEN, Color.BLUE, 0xFF4B0082, 0xFF9400D3};
+    public static void addKonami(Interface.direction dir){
         if(SettingsFragment.onSettingsView && !konami){
             if (nbrDirOnList >7){
                 if (konamiList[0] == Interface.direction.UP &&
@@ -83,7 +83,6 @@ public class Settings extends MainActivity {
             nbrDirOnList = 0;
         }
     }
-
 
     // Time and size settings + get method
     private static final int timeBasis = 5000;

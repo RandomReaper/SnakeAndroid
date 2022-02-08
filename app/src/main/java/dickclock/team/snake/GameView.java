@@ -1,5 +1,6 @@
 package dickclock.team.snake;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -14,6 +15,7 @@ public class GameView extends View {
     private final Paint body = new Paint(Paint.LINEAR_TEXT_FLAG);
     private final Paint apple = new Paint(Paint.LINEAR_TEXT_FLAG);
     private final Paint banana = new Paint(Paint.LINEAR_TEXT_FLAG);
+    private final Paint konami = new Paint(Paint.LINEAR_TEXT_FLAG);
     public static boolean drawing = true;
 
     private int sizeOfSquare;
@@ -45,6 +47,7 @@ public class GameView extends View {
         body.setStyle(Paint.Style.FILL);
         apple.setStyle(Paint.Style.FILL);
         banana.setStyle(Paint.Style.FILL);
+        konami.setStyle(Paint.Style.FILL);
     }
 
     @SuppressWarnings("IntegerDivisionInFloatingPointContext")
@@ -98,6 +101,7 @@ public class GameView extends View {
 
             // Draw board
             int[][] board = GameFragment.snakeGame.getBoard();
+
             for (int y = 0; y < board.length; y++) {
                 for (int x = 0; x < board[0].length; x++) {
                     int startX = x * sizeOfSquare + offsetX;
@@ -109,16 +113,33 @@ public class GameView extends View {
                     if (board[y][x] == Fruit.VALUEFORAPPLE) { canvas.drawRect(startX,startY,endX,endY,apple); }
                     if (board[y][x] == Fruit.VALUEFORBANANA) { canvas.drawRect(startX,startY,endX,endY,banana); }
 
-                    // Draw body of snake
-                    if (board[y][x] > 1) { canvas.drawRect(startX,startY,endX,endY,body); }
+                    // Special Konami code
+                    if (Settings.konami) {
+                        if (board[y][x] >= 1) {
+                            int snakeLength = GameFragment.snakeGame.snake.getLength();
+                            int boardValue = board[y][x];
+                            @SuppressLint("DrawAllocation") int[] rainbowValue = new int[snakeLength];
+                            for (int i = 0; i < rainbowValue.length; i++) {
+                                int n = i;
+                                while (n >= Settings.rainbow.length) { n -= Settings.rainbow.length; }
+                                rainbowValue[i] = n;
+                            }
+                            konami.setColor(Settings.rainbow[ rainbowValue[boardValue-1] ]);
+                            canvas.drawRect(startX,startY,endX,endY,konami);
+                        }
+                    } else {
+                        // Draw body of snake
+                        if (board[y][x] > 1) { canvas.drawRect(startX,startY,endX,endY,body); }
 
-                    // Draw head of snake
-                    if (board[y][x] == 1) { canvas.drawRect(startX,startY,endX,endY,head); }
+                        // Draw head of snake
+                        if (board[y][x] == 1) { canvas.drawRect(startX,startY,endX,endY,head); }
+                    }
                 }
             }
 
         }
     }
+
 
     private void startGame(){
         if(!gameStarted){
