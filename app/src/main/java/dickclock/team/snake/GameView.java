@@ -57,23 +57,25 @@ public class GameView extends View {
 
             w = getWidth();
             h = getHeight();
-            Log.i(MainActivity.TAG,"Pixels: " + h + "x" + w);
+            //Log.i(MainActivity.TAG,"Pixels: " + h + "x" + w);
 
             sizeOfSquare = w / Settings.getSize(level);
-            Log.i(MainActivity.TAG,"Size of square: " + sizeOfSquare);
+            //Log.i(MainActivity.TAG,"Size of square: " + sizeOfSquare);
 
             sizeX = w /sizeOfSquare;
             sizeY = h /sizeOfSquare;
-            Log.i(MainActivity.TAG,"Size: " + sizeX + "x" + sizeY);
+            //Log.i(MainActivity.TAG,"Size: " + sizeX + "x" + sizeY);
 
             startGame();
 
             offsetX = (int) ((w - sizeX * sizeOfSquare) / 2.0);
             offsetY = (int) ((h - sizeY * sizeOfSquare) / 2.0);
-            Log.i(MainActivity.TAG,"Offset: " + offsetX + "x" + offsetY);
+            //Log.i(MainActivity.TAG,"Offset: " + offsetX + "x" + offsetY);
         }
 
         if(drawing && !initDraw){
+
+            canvas.drawColor(Settings.background);
 
             // Draw border
             if (Settings.hasBorder){

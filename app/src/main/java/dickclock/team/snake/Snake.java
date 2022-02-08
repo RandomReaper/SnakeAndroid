@@ -82,7 +82,7 @@ public class Snake {
      * @param n For how many the snake should grow up
      */
     public void growUp(int n){
-        if (MainActivity.cheatCodeOn){ n *= 3;}
+        if (Settings.konami){ n *= 3;}
         length += Math.abs(n);
     }
 

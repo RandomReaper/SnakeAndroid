@@ -21,10 +21,10 @@ android {
     defaultConfig {
         applicationId "dickclock.team.snake"
 
-        minSdkVersion 24
+        minSdkVersion 21
         targetSdkVersion 31
-        versionCode 10
-        versionName "1.2.2"
+        versionCode 23
+        versionName "1.3.2"
         signingConfig signingConfigs.release
     }
 
@@ -43,19 +43,19 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.3.0-alpha01'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation "androidx.activity:activity:1.2.0-alpha08"
-    implementation "androidx.activity:activity-ktx:1.2.0-alpha03"
-    implementation "androidx.fragment:fragment:1.3.0-alpha08"
-    implementation "com.google.android.gms:play-services-games:20.0.1"
-    implementation "com.google.android.gms:play-services-auth:17.0.0"
+    implementation "androidx.activity:activity:1.5.0-alpha01"
+    implementation "androidx.activity:activity-ktx:1.5.0-alpha01"
+    implementation "androidx.fragment:fragment:1.5.0-alpha01"
+    implementation "com.google.android.gms:play-services-games:22.0.1"
+    implementation "com.google.android.gms:play-services-auth:20.1.0"
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     implementation 'com.google.android.material:material:1.5.0'
 }
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
     }
 }

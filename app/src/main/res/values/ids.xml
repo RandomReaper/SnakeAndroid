@@ -11,6 +11,34 @@
     <string name="achievement_10_apples_medium_mode" translatable="false">CgkI7raapvgDEAIQCw</string>
     <!--achievement 10 Apples Hard mode-->
     <string name="achievement_10_apples_hard_mode" translatable="false">CgkI7raapvgDEAIQDA</string>
+    <!--achievement 25 Apples Easy mode-->
+    <string name="achievement_25_apples_easy_mode" translatable="false">CgkI7raapvgDEAIQEA</string>
+    <!--achievement 25 Apples Medium mode-->
+    <string name="achievement_25_apples_medium_mode" translatable="false">CgkI7raapvgDEAIQEQ</string>
+    <!--achievement 25 Apples Hard mode-->
+    <string name="achievement_25_apples_hard_mode" translatable="false">CgkI7raapvgDEAIQEg</string>
+    <!--achievement 50 Apples Easy mode-->
+    <string name="achievement_50_apples_easy_mode" translatable="false">CgkI7raapvgDEAIQEw</string>
+    <!--achievement 50 Apples Medium mode-->
+    <string name="achievement_50_apples_medium_mode" translatable="false">CgkI7raapvgDEAIQFA</string>
+    <!--achievement 50 Apples Hard mode-->
+    <string name="achievement_50_apples_hard_mode" translatable="false">CgkI7raapvgDEAIQFQ</string>
+    <!--achievement 100 Apples Easy mode-->
+    <string name="achievement_100_apples_easy_mode" translatable="false">CgkI7raapvgDEAIQFg</string>
+    <!--achievement 100 Apples Medium mode-->
+    <string name="achievement_100_apples_medium_mode" translatable="false">CgkI7raapvgDEAIQFw</string>
+    <!--achievement 100 Apples Hard mode-->
+    <string name="achievement_100_apples_hard_mode" translatable="false">CgkI7raapvgDEAIQGA</string>
+    <!--achievement 42 Apples-->
+    <string name="achievement_42_apples" translatable="false">CgkI7raapvgDEAIQGQ</string>
+    <!--achievement 69 Apples-->
+    <string name="achievement_69_apples" translatable="false">CgkI7raapvgDEAIQGg</string>
+    <!--achievement 100X 0 Apples Easy mode-->
+    <string name="achievement_100x_0_apples_easy_mode" translatable="false">CgkI7raapvgDEAIQGw</string>
+    <!--achievement 100X 0 Apples Medium mode-->
+    <string name="achievement_100x_0_apples_medium_mode" translatable="false">CgkI7raapvgDEAIQHA</string>
+    <!--achievement 100X 0 Apples Hard mode-->
+    <string name="achievement_100x_0_apples_hard_mode" translatable="false">CgkI7raapvgDEAIQHQ</string>
     <!--achievement 10% of the game board filled in easy mode-->
     <string name="achievement_10_of_the_game_board_filled_in_easy_mode" translatable="false">CgkI7raapvgDEAIQDQ</string>
     <!--achievement 10% of the game board filled in medium mode-->

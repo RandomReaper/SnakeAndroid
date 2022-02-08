@@ -1,6 +1,7 @@
 package dickclock.team.snake;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -58,7 +59,7 @@ public class MainActivity extends FragmentActivity implements
     // tag for debug logging
     public static final String TAG = "DebugHER";
 
-    // playing on hard mode?
+    // Level for the game
     private Settings.level mLevel = Settings.level.EASY;
 
     // The display name of the signed in user.
@@ -70,19 +71,35 @@ public class MainActivity extends FragmentActivity implements
 
     public static MainActivity instance;
 
-    SensorManager sensorManager;
-    Sensor gravity;
-    public static float x, y, z;
+    // Sensors
+    private static SensorManager sensorManager;
+    private static Sensor gravity;
+    private static Sensor accelerometer;
+    private static Sensor magnetometer;
+    private static int x, y, z;
+    private static float[] mGravity;
+    private static float[] mAccelerometer;
+    private static float[] mGeomagnetic;
+
+    // Time
+    private Date currentTime;
+    private long startTime;
     private long previousTime = 0;
+
+    // Memory for settings
+    public static SharedPreferences settings;
+    public static SharedPreferences.Editor editorSettings;
+
     private boolean end = false;
-    Date currentTime;
-    long startTime;
-    public static boolean cheatCodeOn = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         instance = this;
         super.onCreate(savedInstanceState);
+
+        settings = getSharedPreferences("settings", 0);
+        editorSettings = settings.edit();
+        Settings.getSettingsFromMemorize();
 
         setContentView(R.layout.activity_main);
 
@@ -104,20 +121,19 @@ public class MainActivity extends FragmentActivity implements
         mFriendsFragment.setListener(this);
 
         // Add initial Main Menu fragment.
-        // IMPORTANT: if this Activity supported rotation, we'd have to be
-        // more careful about adding the fragment, since the fragment would
-        // already be there after rotation and trying to add it again would
-        // result in overlapping fragments. But since we don't support rotation,
-        // we don't deal with that for code simplicity.
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,
                 mMainMenuFragment).commit();
 
-        // Define the gravity sensor
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        // Define sensors
+        sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
-
+        Settings.gravitySensor = gravity != null;
+        if (!Settings.gravitySensor){
+            accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        }
+        Log.i(MainActivity.TAG, Settings.gravitySensor ? "GravitySensorOn" : "WithoutGravitySensor");
     }
-
 
     private void loadAndPrintEvents() {
 
@@ -147,9 +163,7 @@ public class MainActivity extends FragmentActivity implements
                 .commit();
     }
 
-    private boolean isNotSignedIn() {
-        return GoogleSignIn.getLastSignedInAccount(this) == null;
-    }
+    private boolean isNotSignedIn() { return GoogleSignIn.getLastSignedInAccount(this) == null; }
 
     private void signInSilently() {
         Log.d(TAG, "signInSilently()");
@@ -177,9 +191,15 @@ public class MainActivity extends FragmentActivity implements
 
         // Since the state of the signed in user can change when the activity is not active
         // it is recommended to try and sign in silently from when the app resumes.
-        signInSilently();
+        //TODO for release:
+        //signInSilently();
 
-        sensorManager.registerListener((SensorEventListener) this, gravity, SensorManager.SENSOR_DELAY_UI);
+        if (Settings.gravitySensor) {
+            sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_UI);
+        } else {
+            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
+            sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
+        }
     }
 
     private void signOut() {
@@ -200,17 +220,10 @@ public class MainActivity extends FragmentActivity implements
     }
 
     @Override
-    public void onStartGameRequested(Settings.level level) {
-        startGame(level);
-    }
+    public void onStartGameRequested(Settings.level level) { startGame(level); }
 
     @Override
     public void onShowSettingsRequested(){ switchToFragment(mSettingsFragment); }
-
-    @Override
-    public void cheatCode(){
-        cheatCodeOn = true;
-    }
 
     @Override
     public void onShowAchievementsRequested() {
@@ -246,14 +259,14 @@ public class MainActivity extends FragmentActivity implements
                 .show();
     }
 
-
     private void startGame(Settings.level level) {
         mLevel = level;
-        startTime = currentTime.getTime();
+        try {
+            startTime = currentTime.getTime();
+        } catch (Exception e) {e.printStackTrace();}
         switchToFragment(mGameFragment);
         GameView.level = level;
     }
-
 
     public void onEnteredScore(int score) {
 
@@ -272,28 +285,29 @@ public class MainActivity extends FragmentActivity implements
         }
         mEndFragment.setExplanation(s);
 
-        // check for achievements
-        checkForAchievements(score);
+        if (!Settings.funModeOn) {
 
-        // update leaderboards
-        updateLeaderboards(score);
-        updateLeaderboardsPerformance(score,currentTime.getTime()-startTime);
+            // check for achievements
+            checkForAchievements(score);
 
-        // push those accomplishments to the cloud, if signed in
-        pushAccomplishments();
+            // update leaderboards
+            updateLeaderboards(score);
+            updateLeaderboardsPerformance(score,currentTime.getTime()-startTime);
+
+            // push those accomplishments to the cloud, if signed in
+            pushAccomplishments();
+
+        }
+
 
         // switch to the exciting "you won" screen
         switchToFragment(mEndFragment);
 
     }
 
-    private boolean up10Apple(int n) {
-        return n >= 10;
-    }
+    private boolean up10Apple(int n) { return n >= 10; }
 
-    private boolean p10board(int l, int x, int y){
-        return l > (x*y)/10;
-    }
+    private boolean p10board(int l, int x, int y){ return l > (x*y)/10; }
 
     /**
      * Check for achievements and unlock the appropriate ones.
@@ -301,6 +315,9 @@ public class MainActivity extends FragmentActivity implements
      * @param finalScore     the score the user got.
      */
     private void checkForAchievements(int finalScore) {
+        if(Settings.konami){
+            return;
+        }
         // Check if each condition is met; if so, unlock the corresponding achievement.
         if (up10Apple(finalScore)) {
             switch (mLevel){
@@ -405,13 +422,9 @@ public class MainActivity extends FragmentActivity implements
         }
     }
 
-    public PlayersClient getPlayersClient() {
-        return mPlayersClient;
-    }
+    public PlayersClient getPlayersClient() { return mPlayersClient; }
 
-    public String getDisplayName() {
-        return mDisplayName;
-    }
+    public String getDisplayName() { return mDisplayName; }
 
     /**
      * Update leaderboards with the user's score.
@@ -428,11 +441,11 @@ public class MainActivity extends FragmentActivity implements
         }
     }
     private void updateLeaderboardsPerformance(int finalScore, long time) {
-        if (finalScore < 1){
+        if (finalScore < 1 || Settings.konami){
             return;
         }
         long score = (long) (time/(finalScore*1.1));
-        Log.i(TAG, "Performance: " + score);
+        //Log.i(TAG, "Performance: " + score);
         if (mLevel == Settings.level.HARD && mOutbox.mHardModePerformance < score) {
             mOutbox.mHardModePerformance = score;
         } else if (mLevel == Settings.level.MEDIUM && mOutbox.mMediumModePerformance < score) {
@@ -443,12 +456,11 @@ public class MainActivity extends FragmentActivity implements
     }
 
     @Override
-    public void onWinScreenDismissed() {
-        switchToFragment(mMainMenuFragment);
-    }
+    public void onEndScreenDismissed() { switchToFragment(mMainMenuFragment); }
 
     @Override
     public void onSettingsScreenDismissed() {
+        SettingsFragment.onSettingsView = false;
         switchToFragment(mMainMenuFragment);
     }
 
@@ -535,19 +547,13 @@ public class MainActivity extends FragmentActivity implements
     }
 
     @Override
-    public void onSignInButtonClicked() {
-        startSignInIntent();
-    }
+    public void onSignInButtonClicked() { startSignInIntent(); }
 
     @Override
-    public void onSignOutButtonClicked() {
-        signOut();
-    }
+    public void onSignOutButtonClicked() { signOut(); }
 
     @Override
-    public void onShowFriendsButtonClicked() {
-        switchToFragment(mFriendsFragment);
-    }
+    public void onShowFriendsButtonClicked() { switchToFragment(mFriendsFragment); }
 
     @Override
     public void onBackButtonClicked() {
@@ -556,14 +562,40 @@ public class MainActivity extends FragmentActivity implements
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if ((event.sensor.getType() == Sensor.TYPE_GRAVITY)) {
-            x = event.values[0];
-            y = event.values[1];
-            z = event.values[2];
-            x = ((int)(x*100))/100f;
-            y = ((int)(y*100))/100f;
-            z = ((int)(z*100))/100f;
-            currentTime = Calendar.getInstance().getTime();
+        currentTime = Calendar.getInstance().getTime();
+
+
+        boolean play = false;
+
+        if (Settings.gravitySensor){
+            if (event.sensor.getType() == Sensor.TYPE_GRAVITY) { mGravity = event.values; }
+            if (mGravity != null){
+                play = true;
+                double foo = 90/9.8;
+                x = (int) (foo * event.values[0]);
+                y = (int) (foo * event.values[1]);
+            }
+        } else {
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) { mAccelerometer = event.values; }
+            if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) { mGeomagnetic = event.values; }
+            if (mAccelerometer != null && mGeomagnetic != null){
+                play = true;
+                float R[] = new float[9];
+                float I[] = new float[9];
+                boolean success = SensorManager.getRotationMatrix(R, I, mAccelerometer, mGeomagnetic);
+                if (success) {
+                    float[] orientation = new float[3];
+                    SensorManager.getOrientation(R, orientation);
+                    float pitch = orientation[1];
+                    float roll = orientation[2];
+                    x = (int) Math.toDegrees(roll);
+                    y = (int) Math.toDegrees(pitch);
+                }
+            }
+        }
+
+        if(play){
+            Settings.addKonami(Interface.getNextDir(x,y));
             try {
                 if (GameFragment.snakeGame.isInProgress()){
                     end = false;
@@ -579,20 +611,16 @@ public class MainActivity extends FragmentActivity implements
                     GameView.drawing = false;
                     GameFragment.drawingView.invalidate();
                     int score = GameFragment.snakeGame.getScore();
+                    switchToFragment(mEndFragment);
                     Interface.putScoreTerminal(score);
                     onEnteredScore(score);
-                    switchToFragment(mEndFragment);
-                    Log.i(TAG, "Time: " + (currentTime.getTime()-startTime));
                 }
-            } catch (Exception e) {e.printStackTrace();}
-
+            } catch (Exception ignored) {}
         }
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
     private static class AccomplishmentsOutbox {
         boolean m10AppleEasyAchievement = false;

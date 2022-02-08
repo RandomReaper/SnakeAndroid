@@ -17,15 +17,13 @@ import androidx.fragment.app.Fragment;
  * @author Bruno Oliveira (Google)
  */
 public class MainMenuFragment extends Fragment implements OnClickListener {
-    private String mGreeting = "Hello, anonymous user (not signed in)";
+    private String mGreeting = "Hello, anonymous user (not signed in)!";
     private TextView mGreetingTextView;
     private View mSignInBarView;
     private View mSignOutBarView;
     private View mShowAchievementsButton;
     private View mShowLeaderboardsButton;
     private View mShowFriendsButton;
-    private View mCheatCodeButton;
-    private int cheatNbr;
 
     interface Listener {
         // called when the user presses the `Easy` or `Okay` button; will pass in which via `hardMode`
@@ -47,8 +45,6 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 
         // called when the user presses the `Friends` button
         void onShowFriendsButtonClicked();
-
-        void cheatCode();
     }
 
     private Listener mListener = null;
@@ -62,7 +58,6 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
         View view = inflater.inflate(R.layout.fragment_mainmenu, container, false);
 
         final int[] clickableIds = new int[]{
-                R.id.cheatButton,
                 R.id.easy_mode_button,
                 R.id.medium_mode_button,
                 R.id.hard_mode_button,
@@ -74,8 +69,6 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
                 R.id.show_friends_button
         };
 
-        cheatNbr = 0;
-
         for (int clickableId : clickableIds) {
             view.findViewById(clickableId).setOnClickListener(this);
         }
@@ -84,8 +77,6 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
         mShowAchievementsButton = view.findViewById(R.id.show_achievements_button);
         mShowLeaderboardsButton = view.findViewById(R.id.show_leaderboards_button);
         mShowFriendsButton = view.findViewById(R.id.show_friends_button);
-        mCheatCodeButton = view.findViewById(R.id.cheatButton);
-
         mGreetingTextView = view.findViewById(R.id.text_greeting);
         mSignInBarView = view.findViewById(R.id.sign_in_bar);
         mSignOutBarView = view.findViewById(R.id.sign_out_bar);
@@ -113,21 +104,15 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
         mShowAchievementsButton.setEnabled(!mShowSignInButton);
         mShowLeaderboardsButton.setEnabled(!mShowSignInButton);
         mShowFriendsButton.setEnabled(!mShowSignInButton);
-        mSignInBarView.setVisibility(mShowSignInButton ? View.VISIBLE : View.GONE);
-        //mSignOutBarView.setVisibility(mShowSignInButton ? View.GONE : View.VISIBLE);
-        mSignOutBarView.setVisibility(View.GONE);
-        //mCheatCodeButton.setVisibility(View.INVISIBLE);
-        //mCheatCodeButton.setEnabled(true);
+        //TODO for release: mSignInBarView.setVisibility(mShowSignInButton ? View.VISIBLE : View.GONE);
+        mSignInBarView.setVisibility(View.GONE);
+        mSignOutBarView.setVisibility(mShowSignInButton ? View.GONE : View.VISIBLE);
+        //mSignOutBarView.setVisibility(View.GONE);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.cheatButton:
-                Log.i(MainActivity.TAG, "Cheat number: " + cheatNbr);
-                cheatNbr++;
-                if(cheatNbr >= Settings.nbrForCheatCode) { mListener.cheatCode();}
-                break;
             case R.id.easy_mode_button:
                 mListener.onStartGameRequested(Settings.level.EASY);
                 break;

@@ -34,7 +34,7 @@ public class GameFragment extends Fragment{
     }
 
     public static void startGame(int x, int y){
-        Log.i(MainActivity.TAG, x + "x" + y);
+        //Log.i(MainActivity.TAG, x + "x" + y);
         snakeGame = new Game(y,x);
         snakeGame.Initialization();
         //Interface.drawOnTerminal(snakeGame.getBoard());

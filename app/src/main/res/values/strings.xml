@@ -36,10 +36,20 @@
     <string name="hasBorder">Border</string>
     <string name="hasGrid">Grid</string>
     <string name="sensitivity">Sensitivity</string>
-    <string name="colorBorder">Border colour</string>
-    <string name="colorGrid">Grid colour</string>
-    <string name="colorHead">Head colour</string>
-    <string name="colorBody">Body colour</string>
-    <string name="colorBackground">Background colour</string>
+    <string name="colorBorder">Border color</string>
+    <string name="colorGrid">Grid color</string>
+    <string name="colorHead">Head color</string>
+    <string name="colorBody">Body color</string>
+    <string name="colorBackground">Background color</string>
+
+    <string name="fun_mode">
+        Fun mode\n
+        If you change the settings, your scores will not be saved.
+    </string>
+
+    <string name="fruits_chance">Chance for banana: 1/</string>
+    <string name="number_fruits">Number of fruits\non board</string>
+    <string name="reset_fun_mode">Reset</string>
+
 
 </resources>

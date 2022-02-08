@@ -52,8 +52,6 @@ public class Game {
         // create and place the snake in the board
         this.snake = new Snake(3, this.height / 2, 3, board);
         this.board = this.snake.placeSnake(board);
-
-        Log.i(MainActivity.TAG,"Finish initialisation");
     }
 
     /**

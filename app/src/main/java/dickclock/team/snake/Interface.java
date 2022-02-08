@@ -19,25 +19,29 @@ public class Interface {
 
 
 
-    public static direction getNextDir(float x, float y){
-        double limit = Settings.sensitivity;
-        Log.i(MainActivity.TAG, "prevDire: " + prevDir);
+    public static direction getNextDir(int x, int y){
+        int limit = Settings.sensitivity;
+        //Log.i(MainActivity.TAG, "prevDire: " + prevDir);
         boolean prevUpDown = (prevDir == direction.UP || prevDir == direction.DOWN);
         boolean prevLeftRight = (prevDir == direction.LEFT || prevDir == direction.RIGHT);
         nextDir = direction.NOCHANGE;
         //Log.i(MainActivity.TAG, "xy\n" + x + "\n" + y);
         boolean xInLimit = x > - limit && x < limit;
         boolean yInLimit = y > - limit && y < limit;
-        if(Settings.isStair){
-            if( x > limit && !prevLeftRight ){ nextDir = direction.LEFT; }
-            if( x < -limit && !prevLeftRight ){ nextDir = direction.RIGHT; }
-            if( y > limit && !prevUpDown ){ nextDir = direction.DOWN; }
-            if( y < -limit && !prevUpDown ){ nextDir = direction.UP; }
+        boolean b = x > limit && (yInLimit || x > Math.abs(y));
+        boolean b1 = x < -limit && (yInLimit || x < -Math.abs(y));
+        boolean b2 = y > limit && (xInLimit || y < Math.abs(x));
+        boolean b3 = y < -limit && (xInLimit || y < -Math.abs(x));
+        if(Settings.gravitySensor){
+            if(b){ nextDir = direction.LEFT; }
+            if(b1){ nextDir = direction.RIGHT; }
+            if(b2){ nextDir = direction.DOWN; }
+            if(b3){ nextDir = direction.UP; }
         } else {
-            if( x > limit && yInLimit ){ nextDir = direction.LEFT; }
-            if( x < -limit && yInLimit ){ nextDir = direction.RIGHT; }
-            if( y > limit && xInLimit ){ nextDir = direction.DOWN; }
-            if( y < -limit && xInLimit ){ nextDir = direction.UP; }
+            if(b){ nextDir = direction.RIGHT; }
+            if(b1){ nextDir = direction.LEFT; }
+            if(b2){ nextDir = direction.UP; }
+            if(b3){ nextDir = direction.DOWN; }
         }
         prevDir = nextDir;
         return nextDir;

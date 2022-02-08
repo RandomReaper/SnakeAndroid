@@ -7,7 +7,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.fragment.app.Fragment;
-import dickclock.team.snake.R;
 
 /**
  * Fragment that shows the 'You won' message. Apart from congratulating the user
@@ -30,7 +29,7 @@ public class EndFragment extends Fragment implements OnClickListener {
 
     interface Listener {
         // called when the user presses the `Ok` button
-        void onWinScreenDismissed();
+        void onEndScreenDismissed();
 
         // called when the user presses the `Sign In` button
         void onSignInButtonClicked();
@@ -43,7 +42,7 @@ public class EndFragment extends Fragment implements OnClickListener {
                              ViewGroup container,
                              Bundle savedInstanceState) {
 
-        mView = inflater.inflate(R.layout.fragment_win, container, false);
+        mView = inflater.inflate(R.layout.fragment_end, container, false);
 
         final int[] clickableIds = {
                 R.id.win_ok_button,
@@ -88,8 +87,11 @@ public class EndFragment extends Fragment implements OnClickListener {
         mScoreTextView.setText(String.valueOf(mScore));
         mExplanationTextView.setText(mExplanation);
 
-        mSignInBar.setVisibility(mShowSignIn ? View.VISIBLE : View.GONE);
+
+        //TODO for release: mSignInBar.setVisibility(mShowSignIn ? View.VISIBLE : View.GONE);
+        mSignInBar.setVisibility(View.GONE);
         //mSignedInBar.setVisibility(mShowSignIn ? View.GONE : View.VISIBLE);
+        mSignedInBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -99,7 +101,7 @@ public class EndFragment extends Fragment implements OnClickListener {
                 mListener.onSignInButtonClicked();
                 break;
             case R.id.win_ok_button:
-                mListener.onWinScreenDismissed();
+                mListener.onEndScreenDismissed();
                 break;
         }
     }
