@@ -104,11 +104,23 @@ public class Game {
 
             // Check if head don't hit a part of body of snake and turn of the game if yes
             if (board[headY][headX] > 0) {
-                this.inProgress = false;
+                /**
+                 * Konami part is an add-on of the initial game for bonus
+                 * @author Rémi Heredero
+                 */
+                if (Settings.konami) {
+                    snake.length = board[headY][headX] - 1;
+                    for (int y = 0; y < board.length; y++) {
+                        for (int x = 0; x < board[0].length; x++) {
+                            if (board[y][x] >= snake.getLength()){ board[y][x] = 0; }
+                        }
+                    }
+                } else {
+                    this.inProgress = false;
+                }
             } else {
 
-                // Check if a fruit is on place to the next position of the head of snake and
-                // makes the snake grow if yes
+                // Check if a fruit is on place to the next position of the head of snake and makes the snake grow if yes
                 if (Fruit.isFruit(board[headY][headX])) {
                     snake.growUp(Fruit.eatFruit(board[headY][headX]));
                 }

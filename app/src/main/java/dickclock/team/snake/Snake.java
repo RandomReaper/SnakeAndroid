@@ -10,7 +10,7 @@ public class Snake {
     private final int startY; // position Y of start the snake
     private final int startLength; // first length of the snake
 
-    private int length; // current length of snake
+    public int length; // current length of snake
 
     /**
      * Create a Snake to position startX, startY for the head with the length of startLength
@@ -83,14 +83,7 @@ public class Snake {
      * Just growUp the Snake with the value in argument
      * @param n For how many the snake should grow up
      */
-    public void growUp(int n){
-        /**
-         * Konami part is an add-on of the initial game for bonus
-         * @author Rémi Heredero
-         */
-        if (Settings.konami){ n *= 3;}
-        length += Math.abs(n);
-    }
+    public void growUp(int n){ length += Math.abs(n); }
 
     /**
      * Get position of head of snake
