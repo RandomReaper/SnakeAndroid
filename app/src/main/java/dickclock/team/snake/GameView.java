@@ -27,8 +27,6 @@ public class GameView extends View {
     private int offsetY;
     public static Settings.level level;
 
-
-
     public GameView(Context context){
         super(context);
 

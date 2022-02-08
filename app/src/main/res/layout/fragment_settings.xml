@@ -18,7 +18,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -171,7 +171,8 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/sensitivity_settings_textView"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck" />
 
                 <TextView
                     android:id="@+id/grid_settings_textView"
@@ -192,7 +193,8 @@
                     android:layout_marginTop="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/sensitivity_settings_textView"
-                    app:layout_constraintTop_toBottomOf="@+id/hasBorder_toggle" />
+                    app:layout_constraintTop_toBottomOf="@+id/hasBorder_toggle"
+                    tools:ignore="TextContrastCheck" />
 
                 <TextView
                     android:id="@+id/sensitivity_settings_textView"
@@ -253,11 +255,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:autofillHints=""
                     android:ems="2"
                     android:gravity="center"
-                    android:hint="0"
+                    android:hint="@string/defaultChanceForBanana"
                     android:inputType="number"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
                     app:layout_constraintEnd_toStartOf="@+id/reset_fun_mode"
                     app:layout_constraintTop_toBottomOf="@+id/fun_mode_textView" />
 
@@ -277,11 +282,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:autofillHints=""
                     android:ems="2"
                     android:gravity="center"
-                    android:hint="1"
+                    android:hint="@string/defaultNumberOfFruits"
                     android:inputType="number"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/reset_fun_mode"
                     app:layout_constraintTop_toBottomOf="@+id/fruits_chance_editTextNumber" />

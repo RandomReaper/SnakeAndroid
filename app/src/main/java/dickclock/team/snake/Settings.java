@@ -1,6 +1,5 @@
 package dickclock.team.snake;
 
-import android.app.Fragment;
 import android.graphics.Color;
 import android.util.Log;
 import android.widget.Toast;
@@ -45,46 +44,43 @@ public class Settings extends MainActivity {
     public static boolean funModeOn = false;
 
     // Debug settings
-    public static boolean isStair = false;
     public static boolean gravitySensor = false;
 
     // Konami code settings and method
     public static boolean konami = false;
-    private static Interface.direction[] konamiListe = new Interface.direction[8];
-    private static int nbrDirOnListe = 0;
+    private static final Interface.direction[] konamiList = new Interface.direction[8];
+    private static int nbrDirOnList = 0;
     private static Interface.direction prevDir = Interface.direction.NOCHANGE;
 
-    public static void addKonami(Interface.direction dir){
+    public static void addKonami(Interface.direction dir){ //TODO rainbow drawing
         if(SettingsFragment.onSettingsView && !konami){
-            if (nbrDirOnListe >7){
-                if (konamiListe[0] == Interface.direction.UP &&
-                    konamiListe[1] == Interface.direction.UP &&
-                    konamiListe[2] == Interface.direction.DOWN &&
-                    konamiListe[3] == Interface.direction.DOWN &&
-                    konamiListe[4] == Interface.direction.LEFT &&
-                    konamiListe[5] == Interface.direction.RIGHT &&
-                    konamiListe[6] == Interface.direction.LEFT &&
-                    konamiListe[7] == Interface.direction.RIGHT){
+            if (nbrDirOnList >7){
+                if (konamiList[0] == Interface.direction.UP &&
+                    konamiList[1] == Interface.direction.UP &&
+                    konamiList[2] == Interface.direction.DOWN &&
+                    konamiList[3] == Interface.direction.DOWN &&
+                    konamiList[4] == Interface.direction.LEFT &&
+                    konamiList[5] == Interface.direction.RIGHT &&
+                    konamiList[6] == Interface.direction.LEFT &&
+                    konamiList[7] == Interface.direction.RIGHT){
                     konami = true;
                     Log.i(MainActivity.TAG, "KONAMI!!");
                     Toast.makeText(MainActivity.instance.getBaseContext(), "KONAMI !!", Toast.LENGTH_LONG).show();
                     Settings.head = Color.GREEN;
                 } else {
-                    nbrDirOnListe = 0;
+                    nbrDirOnList = 0;
                 }
             } else {
                 if (dir == Interface.direction.NOCHANGE && dir != prevDir){
-                    //Log.i(MainActivity.TAG, "Konami no change: " + dir);
-                    nbrDirOnListe++;
+                    nbrDirOnList++;
                     prevDir = dir;
                 } else if(dir != prevDir){
-                    //Log.i(MainActivity.TAG, "Konami: " + dir);
-                    konamiListe[nbrDirOnListe] = dir;
+                    konamiList[nbrDirOnList] = dir;
                     prevDir = dir;
                 }
             }
         } else {
-            nbrDirOnListe = 0;
+            nbrDirOnList = 0;
         }
     }
 
@@ -154,7 +150,7 @@ public class Settings extends MainActivity {
 
 
     private static int getFromMemorize(String key, int def){ return (MainActivity.settings.getInt(key, def)); }
-    //private static double getFromMemorize(String key, double def){ return (MainActivity.settings.getFloat(key, (float)def)); }
+    private static double getFromMemorize(String key, double def){ return (MainActivity.settings.getFloat(key, (float)def)); }
     private static boolean getFromMemorize(String key, boolean def){ return (MainActivity.settings.getBoolean(key, def)); }
 
 

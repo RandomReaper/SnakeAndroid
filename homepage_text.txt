@@ -1,0 +1,12 @@
+What is Snake ?:
+This application is an adaptation of the snake game created during the first semester IT project of Industrial Systems at the HES-SO Valais-Wallis
+
+What your data is used for ?:
+The application uses your google account only to record your scores and achievements. No personal data is visible to the developers. 
+
+What is the purpose of logging into your google account ?:
+Through the connection with your google account, you can compare your scores and performances with your friends and other players.
+
+Privacy Policy:
+Only the connection status and the identification of your google account is stored by the application.
+No personal data is shared. All data remains on your phone except your scores and achievements of course.

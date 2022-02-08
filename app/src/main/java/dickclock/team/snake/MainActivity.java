@@ -318,6 +318,8 @@ public class MainActivity extends FragmentActivity implements
         if(Settings.konami){
             return;
         }
+
+        // TODO add all achievement
         // Check if each condition is met; if so, unlock the corresponding achievement.
         if (up10Apple(finalScore)) {
             switch (mLevel){
@@ -556,15 +558,11 @@ public class MainActivity extends FragmentActivity implements
     public void onShowFriendsButtonClicked() { switchToFragment(mFriendsFragment); }
 
     @Override
-    public void onBackButtonClicked() {
-        switchToFragment(mMainMenuFragment);
-    }
+    public void onBackButtonClicked() { switchToFragment(mMainMenuFragment); }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         currentTime = Calendar.getInstance().getTime();
-
-
         boolean play = false;
 
         if (Settings.gravitySensor){
@@ -580,16 +578,13 @@ public class MainActivity extends FragmentActivity implements
             if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) { mGeomagnetic = event.values; }
             if (mAccelerometer != null && mGeomagnetic != null){
                 play = true;
-                float R[] = new float[9];
-                float I[] = new float[9];
-                boolean success = SensorManager.getRotationMatrix(R, I, mAccelerometer, mGeomagnetic);
-                if (success) {
+                float[] R = new float[9];
+                float[] I = new float[9];
+                if ( SensorManager.getRotationMatrix(R, I, mAccelerometer, mGeomagnetic) ) {
                     float[] orientation = new float[3];
                     SensorManager.getOrientation(R, orientation);
-                    float pitch = orientation[1];
-                    float roll = orientation[2];
-                    x = (int) Math.toDegrees(roll);
-                    y = (int) Math.toDegrees(pitch);
+                    x = (int) Math.toDegrees( orientation[2] );
+                    y = (int) Math.toDegrees( orientation[1] );
                 }
             }
         }

@@ -4,9 +4,6 @@
     android:id="@+id/screen_menu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00FFFFFF"
-    android:backgroundTint="#00FFFFFF"
-    android:foregroundTint="#00FFFFFF"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -119,10 +116,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:text="@string/sign_in_why"
-            android:textColor="#808080" />
+            android:textColor="#808080"
+            tools:ignore="TextContrastCheck" />
     </LinearLayout>
 
     <LinearLayout
@@ -138,10 +135,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:text="@string/you_are_signed_in"
-            android:textColor="#808080" />
+            android:textColor="#808080"
+            tools:ignore="TextContrastCheck" />
 
         <Button
             android:id="@+id/sign_out_button"

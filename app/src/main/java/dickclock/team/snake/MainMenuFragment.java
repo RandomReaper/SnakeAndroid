@@ -1,5 +1,6 @@
 package dickclock.team.snake;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -110,6 +111,7 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
         //mSignOutBarView.setVisibility(View.GONE);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()) {

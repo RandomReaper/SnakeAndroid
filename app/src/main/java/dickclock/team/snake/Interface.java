@@ -2,8 +2,12 @@ package dickclock.team.snake;
 
 import android.util.Log;
 
+/**
+ * Class for manage interface
+ * Get next direction with sensors and print on Terminal some information
+ * @author Arnaud Ducrey, Julien Chevalley, Rémi Heredero
+ */
 public class Interface {
-
 
     // Define a new type for direction
     public enum direction {
@@ -15,23 +19,29 @@ public class Interface {
     }
 
     public static direction nextDir; // Define nextDirection
-    public static direction prevDir; // Define nextDirection
 
-
-
+    /**
+     * Get next direction with orientation on phone
+     * @param x degrees in roll axis
+     * @param y degrees in pitch axis
+     * @return next direction
+     */
     public static direction getNextDir(int x, int y){
         int limit = Settings.sensitivity;
-        //Log.i(MainActivity.TAG, "prevDire: " + prevDir);
-        boolean prevUpDown = (prevDir == direction.UP || prevDir == direction.DOWN);
-        boolean prevLeftRight = (prevDir == direction.LEFT || prevDir == direction.RIGHT);
         nextDir = direction.NOCHANGE;
-        //Log.i(MainActivity.TAG, "xy\n" + x + "\n" + y);
+
         boolean xInLimit = x > - limit && x < limit;
         boolean yInLimit = y > - limit && y < limit;
-        boolean b = x > limit && (yInLimit || x > Math.abs(y));
-        boolean b1 = x < -limit && (yInLimit || x < -Math.abs(y));
-        boolean b2 = y > limit && (xInLimit || y < Math.abs(x));
-        boolean b3 = y < -limit && (xInLimit || y < -Math.abs(x));
+
+        boolean b = x > limit && ( yInLimit || x > Math.abs(y) );
+        boolean b1 = x < -limit && ( yInLimit || x < -Math.abs(y) );
+        boolean b2 = y > limit && ( xInLimit || y < Math.abs(x) );
+        boolean b3 = y < -limit && ( xInLimit || y < -Math.abs(x) );
+
+        /* To type of sensor can be used, depend witch phone
+         * Both are different for calculate the angle
+         * So, depend the sensor, next direction by the angle isn't same
+         */
         if(Settings.gravitySensor){
             if(b){ nextDir = direction.LEFT; }
             if(b1){ nextDir = direction.RIGHT; }
@@ -43,7 +53,6 @@ public class Interface {
             if(b2){ nextDir = direction.UP; }
             if(b3){ nextDir = direction.DOWN; }
         }
-        prevDir = nextDir;
         return nextDir;
     }
 

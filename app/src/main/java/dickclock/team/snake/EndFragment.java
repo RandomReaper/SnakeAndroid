@@ -9,11 +9,8 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 /**
- * Fragment that shows the 'You won' message. Apart from congratulating the user
- * on their heroic number typing deeds, this screen also allows the player to sign
- * in if they are not signed in yet.
- *
- * @author Bruno Oliveira (Google)
+ * Fragment that shows the end message with score
+ * @author Rémi Heredero
  */
 public class EndFragment extends Fragment implements OnClickListener {
     private String mExplanation = "";
@@ -87,11 +84,10 @@ public class EndFragment extends Fragment implements OnClickListener {
         mScoreTextView.setText(String.valueOf(mScore));
         mExplanationTextView.setText(mExplanation);
 
-
-        //TODO for release: mSignInBar.setVisibility(mShowSignIn ? View.VISIBLE : View.GONE);
+        //TODO for release:
+        // mSignInBar.setVisibility(mShowSignIn ? View.VISIBLE : View.GONE);
         mSignInBar.setVisibility(View.GONE);
-        //mSignedInBar.setVisibility(mShowSignIn ? View.GONE : View.VISIBLE);
-        mSignedInBar.setVisibility(View.GONE);
+        mSignedInBar.setVisibility(View.GONE); //mSignedInBar.setVisibility(mShowSignIn ? View.GONE : View.VISIBLE);
     }
 
     @Override

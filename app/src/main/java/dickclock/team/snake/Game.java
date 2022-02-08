@@ -1,11 +1,10 @@
 package dickclock.team.snake;
 
-
-import android.util.Log;
-
 /**
  * Main Class for the game.
  * Manage everything about the game
+ * @date 21/01/22
+ * @author Arnaud Ducrey, Julien Chevalley, Rémi Heredero
  */
 public class Game {
 

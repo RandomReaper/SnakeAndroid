@@ -2,6 +2,8 @@ package dickclock.team.snake;
 
 /**
  * This class is used for manage the snake. All the methods about the snake are here.
+ * @date 21/01/22
+ * @author Arnaud Ducrey, Julien Chevalley, Rémi Heredero
  */
 public class Snake {
     private final int startX; // position X of start the snake
@@ -82,6 +84,10 @@ public class Snake {
      * @param n For how many the snake should grow up
      */
     public void growUp(int n){
+        /**
+         * Konami part is an add-on of the initial game for bonus
+         * @author Rémi Heredero
+         */
         if (Settings.konami){ n *= 3;}
         length += Math.abs(n);
     }

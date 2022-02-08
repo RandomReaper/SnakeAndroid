@@ -33,23 +33,27 @@
     <string name="signin_other_error">There was an issue with sign in.  Please try again later.</string>
     <string name="friends_title">Friends</string>
     <string name="back">Back</string>
-    <string name="hasBorder">Border</string>
-    <string name="hasGrid">Grid</string>
-    <string name="sensitivity">Sensitivity</string>
+
     <string name="colorBorder">Border color</string>
     <string name="colorGrid">Grid color</string>
     <string name="colorHead">Head color</string>
     <string name="colorBody">Body color</string>
     <string name="colorBackground">Background color</string>
 
+    <string name="hasBorder">Border</string>
+    <string name="hasGrid">Grid</string>
+    <string name="sensitivity">Sensitivity</string>
+
     <string name="fun_mode">
         Fun mode\n
         If you change the settings, your scores will not be saved.
     </string>
-
     <string name="fruits_chance">Chance for banana: 1/</string>
+    <string name="defaultChanceForBanana">0</string>
     <string name="number_fruits">Number of fruits\non board</string>
+    <string name="defaultNumberOfFruits">1</string>
     <string name="reset_fun_mode">Reset</string>
+    <string name="friends_icon">Friends icon</string>
 
 
 </resources>
