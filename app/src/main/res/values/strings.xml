@@ -11,8 +11,8 @@
     <string name="medium_mode_explanation">Not so easy, isn\'t it ?</string>
     <string name="hard_mode_explanation">It was pretty hard, isn\'t it ?</string>
 
-    <string name="achievement_10_apple_toast_text">You ate 10 apples in on game on this level, congratulations !</string>
-    <string name="achievement_p10_board_toast_text">Your snake has filled 10% of the entire game board, congratulations !</string>
+    <string name="achievement_x_apple_toast_text">Eat %1$d apples in one game</string>
+    <string name="achievement_p10_board_toast_text">Your snake has filled 10% of the entire game board</string>
     <string name="achievement">Achievement</string>
     <string name="your_progress_will_be_uploaded">Your existing achievements and score will be uploaded shortly.</string>
     <string name="choose_difficulty">Choose a difficulty to play:</string>

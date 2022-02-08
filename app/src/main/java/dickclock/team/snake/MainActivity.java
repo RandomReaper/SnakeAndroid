@@ -192,7 +192,7 @@ public class MainActivity extends FragmentActivity implements
         // Since the state of the signed in user can change when the activity is not active
         // it is recommended to try and sign in silently from when the app resumes.
         //TODO for release:
-        //signInSilently();
+        signInSilently();
 
         if (Settings.gravitySensor) {
             sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_UI);
@@ -305,7 +305,7 @@ public class MainActivity extends FragmentActivity implements
 
     }
 
-    private boolean up10Apple(int n) { return n >= 10; }
+    private boolean upNbrApple(int score, int n) { return score >= n; }
 
     private boolean p10board(int l, int x, int y){ return l > (x*y)/10; }
 
@@ -315,40 +315,57 @@ public class MainActivity extends FragmentActivity implements
      * @param finalScore     the score the user got.
      */
     private void checkForAchievements(int finalScore) {
-        if(Settings.konami){
-            return;
-        }
-
-        // TODO add all achievement
+        // TODO add 100x0 achievements
         // Check if each condition is met; if so, unlock the corresponding achievement.
-        if (up10Apple(finalScore)) {
+        int m10 = 10;
+        int m25 = 25;
+        int m50 = 50;
+        int m100 = 100;
+        int m42 = 42;
+        int m69 = 69;
+        if (upNbrApple(finalScore, m100)){
             switch (mLevel){
-                case EASY:
-                    mOutbox.m10AppleEasyAchievement = true;
-                    break;
-                case MEDIUM:
-                    mOutbox.m10AppleMediumAchievement = true;
-                    break;
-                case HARD:
-                    mOutbox.m10AppleHardAchievement = true;
-                    break;
+                case EASY: mOutbox.m100AppleEasyAchievement = true; break;
+                case MEDIUM: mOutbox.m100AppleMediumAchievement = true; break;
+                case HARD: mOutbox.m100AppleHardAchievement = true; break;
             }
-            achievementToast(getString(R.string.achievement_10_apple_toast_text));
+            achievementToast(getString(R.string.achievement_x_apple_toast_text, m100));
+        } else if (upNbrApple(finalScore, m69)){
+            mOutbox.m69AppleAchievement = true;
+            achievementToast(getString(R.string.achievement_x_apple_toast_text, m69));
+        } else if (upNbrApple(finalScore, m50)){
+            switch (mLevel){
+                case EASY: mOutbox.m50AppleEasyAchievement = true; break;
+                case MEDIUM: mOutbox.m50AppleMediumAchievement = true; break;
+                case HARD: mOutbox.m50AppleHardAchievement = true; break;
+            }
+            achievementToast(getString(R.string.achievement_x_apple_toast_text, m50));
+        } else if (upNbrApple(finalScore, m42)){
+            mOutbox.m42AppleAchievement = true;
+            achievementToast(getString(R.string.achievement_x_apple_toast_text, m42));
+        } else if (upNbrApple(finalScore, m25)){
+            switch (mLevel){
+                case EASY: mOutbox.m25AppleEasyAchievement = true; break;
+                case MEDIUM: mOutbox.m25AppleMediumAchievement = true; break;
+                case HARD: mOutbox.m25AppleHardAchievement = true; break;
+            }
+            achievementToast(getString(R.string.achievement_x_apple_toast_text, m25));
+        } else if (upNbrApple(finalScore, m10)) {
+            switch (mLevel){
+                case EASY: mOutbox.m10AppleEasyAchievement = true; break;
+                case MEDIUM: mOutbox.m10AppleMediumAchievement = true; break;
+                case HARD: mOutbox.m10AppleHardAchievement = true; break;
+            }
+            achievementToast(getString(R.string.achievement_x_apple_toast_text, m10));
         }
 
         if (    p10board(GameFragment.snakeGame.snake.getLength(),
                 GameFragment.snakeGame.getBoard().length,
                 GameFragment.snakeGame.getBoard()[0].length))   {
             switch (mLevel){
-                case EASY:
-                    mOutbox.p10BoardEasy = true;
-                    break;
-                case MEDIUM:
-                    mOutbox.p10BoardMedium = true;
-                    break;
-                case HARD:
-                    mOutbox.p10BoardHard = true;
-                    break;
+                case EASY: mOutbox.p10BoardEasy = true; break;
+                case MEDIUM: mOutbox.p10BoardMedium = true; break;
+                case HARD: mOutbox.p10BoardHard = true; break;
             }
             achievementToast(getString(R.string.achievement_p10_board_toast_text));
         }
@@ -443,7 +460,7 @@ public class MainActivity extends FragmentActivity implements
         }
     }
     private void updateLeaderboardsPerformance(int finalScore, long time) {
-        if (finalScore < 1 || Settings.konami){
+        if (finalScore < 1){
             return;
         }
         long score = (long) (time/(finalScore*1.1));

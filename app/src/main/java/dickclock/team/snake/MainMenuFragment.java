@@ -105,8 +105,9 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
         mShowAchievementsButton.setEnabled(!mShowSignInButton);
         mShowLeaderboardsButton.setEnabled(!mShowSignInButton);
         mShowFriendsButton.setEnabled(!mShowSignInButton);
-        //TODO for release: mSignInBarView.setVisibility(mShowSignInButton ? View.VISIBLE : View.GONE);
-        mSignInBarView.setVisibility(View.GONE);
+        //TODO for release:
+        mSignInBarView.setVisibility(mShowSignInButton ? View.VISIBLE : View.GONE);
+        //mSignInBarView.setVisibility(View.GONE);
         mSignOutBarView.setVisibility(mShowSignInButton ? View.GONE : View.VISIBLE);
         //mSignOutBarView.setVisibility(View.GONE);
     }

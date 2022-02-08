@@ -85,9 +85,10 @@ public class EndFragment extends Fragment implements OnClickListener {
         mExplanationTextView.setText(mExplanation);
 
         //TODO for release:
-        // mSignInBar.setVisibility(mShowSignIn ? View.VISIBLE : View.GONE);
-        mSignInBar.setVisibility(View.GONE);
-        mSignedInBar.setVisibility(View.GONE); //mSignedInBar.setVisibility(mShowSignIn ? View.GONE : View.VISIBLE);
+        mSignInBar.setVisibility(mShowSignIn ? View.VISIBLE : View.GONE);
+        //mSignInBar.setVisibility(View.GONE);
+        //mSignedInBar.setVisibility(View.GONE);
+        mSignedInBar.setVisibility(mShowSignIn ? View.GONE : View.VISIBLE);
     }
 
     @Override
