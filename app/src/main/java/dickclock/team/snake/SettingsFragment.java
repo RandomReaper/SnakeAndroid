@@ -3,6 +3,7 @@ package dickclock.team.snake;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -167,9 +168,11 @@ public class SettingsFragment extends Fragment implements OnClickListener {
         mBackgroundSeekBar.setProgress(getHue(Settings.background));
 
         // Update Fun part
+        mChanceForBanana.setFilters(new InputFilter[] {new Filters(Filters.Type.CHANCE)});
         if (Settings.fruitsChance != Settings.fruitsChanceBase) {
             mChanceForBanana.setText(String.valueOf(Settings.fruitsChance - Settings.fruitsChanceBase));
         }
+        mNbrFruits.setFilters(new InputFilter[] {new Filters(Filters.Type.NUMBER)});
         if (Settings.numberOfFruits != Settings.numberOfFruitsBase) {
             mNbrFruits.setText(String.valueOf(Settings.numberOfFruits));
         }
