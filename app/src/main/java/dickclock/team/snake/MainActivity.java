@@ -174,15 +174,13 @@ public class MainActivity extends FragmentActivity implements
                         Log.d(TAG, "signInSilently(): success");
                         onConnected(task.getResult());
                     } else {
-                        //Log.d(TAG, "signInSilently(): failure", task.getException());
+                        Log.d(TAG, "signInSilently(): failure"/*, task.getException()*/);
                         onDisconnected();
                     }
                 });
     }
 
-    private void startSignInIntent() {
-        startActivityForResult(mGoogleSignInClient.getSignInIntent(), RC_SIGN_IN);
-    }
+    private void startSignInIntent() { try { startActivityForResult(mGoogleSignInClient.getSignInIntent(), RC_SIGN_IN); } catch (Exception ignored) {} }
 
     @Override
     protected void onResume() {
@@ -192,7 +190,8 @@ public class MainActivity extends FragmentActivity implements
         // Since the state of the signed in user can change when the activity is not active
         // it is recommended to try and sign in silently from when the app resumes.
         //TODO for release:
-        signInSilently();
+        try { signInSilently(); } catch (Exception ignored) {}
+
 
         if (Settings.gravitySensor) {
             sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_UI);
@@ -564,10 +563,12 @@ public class MainActivity extends FragmentActivity implements
 
                 onDisconnected();
 
-                new AlertDialog.Builder(this)
-                        .setMessage(message)
-                        .setNeutralButton(android.R.string.ok, null)
-                        .show();
+                try {
+                    new AlertDialog.Builder(this)
+                            .setMessage(message)
+                            .setNeutralButton(android.R.string.ok, null)
+                            .show();
+                } catch (Exception ignored) {}
             }
         }
     }
@@ -629,7 +630,7 @@ public class MainActivity extends FragmentActivity implements
     }
 
     @Override
-    public void onSignInButtonClicked() { startSignInIntent(); }
+    public void onSignInButtonClicked() { try { startSignInIntent(); } catch (Exception ignored) {} }
 
     @Override
     public void onSignOutButtonClicked() { signOut(); }

@@ -1,5 +1,6 @@
 package dickclock.team.snake;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,13 +85,11 @@ public class EndFragment extends Fragment implements OnClickListener {
         mScoreTextView.setText(String.valueOf(mScore));
         mExplanationTextView.setText(mExplanation);
 
-        //TODO for release:
         mSignInBar.setVisibility(mShowSignIn ? View.VISIBLE : View.GONE);
-        //mSignInBar.setVisibility(View.GONE);
-        //mSignedInBar.setVisibility(View.GONE);
         mSignedInBar.setVisibility(mShowSignIn ? View.GONE : View.VISIBLE);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()) {

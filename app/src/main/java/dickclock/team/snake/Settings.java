@@ -51,7 +51,8 @@ public class Settings extends MainActivity {
     private static final Interface.direction[] konamiList = new Interface.direction[8];
     private static int nbrDirOnList = 0;
     private static Interface.direction prevDir = Interface.direction.NOCHANGE;
-    public static int[] rainbow = new int[]{Color.RED, 0xFFFF7F00, Color.YELLOW, Color.GREEN, Color.BLUE, 0xFF4B0082, 0xFF9400D3};
+    public static int[] konamiColor = new int[]{Color.RED, 0xFFFF7F00, Color.YELLOW, Color.GREEN, Color.BLUE, 0xFF4B0082, 0xFF9400D3};
+    public static final int konamiSensitivity = 30;
     public static void addKonami(Interface.direction dir){
         if(SettingsFragment.onSettingsView && !konami){
             if (nbrDirOnList >7){

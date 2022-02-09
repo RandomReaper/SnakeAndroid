@@ -121,10 +121,10 @@ public class GameView extends View {
                             @SuppressLint("DrawAllocation") int[] rainbowValue = new int[snakeLength];
                             for (int i = 0; i < rainbowValue.length; i++) {
                                 int n = i;
-                                while (n >= Settings.rainbow.length) { n -= Settings.rainbow.length; }
+                                while (n >= Settings.konamiColor.length) { n -= Settings.konamiColor.length; }
                                 rainbowValue[i] = n;
                             }
-                            konami.setColor(Settings.rainbow[ rainbowValue[boardValue-1] ]);
+                            konami.setColor(Settings.konamiColor[ rainbowValue[boardValue-1] ]);
                             canvas.drawRect(startX,startY,endX,endY,konami);
                         }
                     } else {

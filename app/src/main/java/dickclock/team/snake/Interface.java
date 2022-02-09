@@ -27,7 +27,7 @@ public class Interface {
      * @return next direction
      */
     public static direction getNextDir(int x, int y){
-        int limit = Settings.sensitivity;
+        int limit = (SettingsFragment.onSettingsView) ? Settings.konamiSensitivity : Settings.sensitivity;
         nextDir = direction.NOCHANGE;
 
         boolean xInLimit = x > - limit && x < limit;
