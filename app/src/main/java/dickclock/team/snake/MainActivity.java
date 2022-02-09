@@ -167,17 +167,18 @@ public class MainActivity extends FragmentActivity implements
 
     private void signInSilently() {
         Log.d(TAG, "signInSilently()");
-
-        mGoogleSignInClient.silentSignIn().addOnCompleteListener(this,
-                task -> {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "signInSilently(): success");
-                        onConnected(task.getResult());
-                    } else {
-                        Log.d(TAG, "signInSilently(): failure"/*, task.getException()*/);
-                        onDisconnected();
-                    }
-                });
+        try {
+            mGoogleSignInClient.silentSignIn().addOnCompleteListener(this,
+                    task -> {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "signInSilently(): success");
+                            onConnected(task.getResult());
+                        } else {
+                            Log.d(TAG, "signInSilently(): failure"/*, task.getException()*/);
+                            onDisconnected();
+                        }
+                    });
+        } catch (Exception ignored) {}
     }
 
     private void startSignInIntent() { try { startActivityForResult(mGoogleSignInClient.getSignInIntent(), RC_SIGN_IN); } catch (Exception ignored) {} }
@@ -189,7 +190,6 @@ public class MainActivity extends FragmentActivity implements
 
         // Since the state of the signed in user can change when the activity is not active
         // it is recommended to try and sign in silently from when the app resumes.
-        //TODO for release:
         try { signInSilently(); } catch (Exception ignored) {}
 
 
@@ -208,14 +208,15 @@ public class MainActivity extends FragmentActivity implements
             Log.w(TAG, "signOut() called, but was not signed in!");
             return;
         }
+        try {
+            mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                    task -> {
+                        boolean successful = task.isSuccessful();
+                        Log.d(TAG, "signOut(): " + (successful ? "success" : "failed"));
 
-        mGoogleSignInClient.signOut().addOnCompleteListener(this,
-                task -> {
-                    boolean successful = task.isSuccessful();
-                    Log.d(TAG, "signOut(): " + (successful ? "success" : "failed"));
-
-                    onDisconnected();
-                });
+                        onDisconnected();
+                    });
+        } catch (Exception ignored) {}
     }
 
     @Override
@@ -633,7 +634,7 @@ public class MainActivity extends FragmentActivity implements
     public void onSignInButtonClicked() { try { startSignInIntent(); } catch (Exception ignored) {} }
 
     @Override
-    public void onSignOutButtonClicked() { signOut(); }
+    public void onSignOutButtonClicked() { try { signOut(); } catch (Exception ignored) {} }
 
     @Override
     public void onShowFriendsButtonClicked() { switchToFragment(mFriendsFragment); }
