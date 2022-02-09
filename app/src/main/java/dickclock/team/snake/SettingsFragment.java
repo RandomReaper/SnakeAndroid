@@ -145,6 +145,11 @@ public class SettingsFragment extends Fragment implements OnClickListener {
             return;
         }
 
+        // Update User part
+        mHasBorder.setChecked(Settings.hasBorder);
+        mHasGrid.setChecked(Settings.hasGrid);
+        mSensitivity.setProgress(mSensitivity.getMax() - (Settings.sensitivity - 5));
+
         // Update Color part
         mBorderTextView.setVisibility(mHasBorder.isChecked() ? View.VISIBLE : View.GONE);
         mBorderSeekBar.setVisibility(mHasBorder.isChecked() ? View.VISIBLE : View.GONE);
@@ -160,11 +165,6 @@ public class SettingsFragment extends Fragment implements OnClickListener {
         mBodySeekBar.setProgress(getHue(Settings.body));
         mBackgroundSeekBar.setBackgroundColor(Settings.background);
         mBackgroundSeekBar.setProgress(getHue(Settings.background));
-
-        // Update User part
-        mHasBorder.setChecked(Settings.hasBorder);
-        mHasGrid.setChecked(Settings.hasGrid);
-        mSensitivity.setProgress(mSensitivity.getMax() - (Settings.sensitivity - 5));
 
         // Update Fun part
         if (Settings.fruitsChance != Settings.fruitsChanceBase) {
