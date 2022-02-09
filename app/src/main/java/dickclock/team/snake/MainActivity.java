@@ -315,7 +315,6 @@ public class MainActivity extends FragmentActivity implements
      * @param finalScore     the score the user got.
      */
     private void checkForAchievements(int finalScore) {
-        // TODO add 100x0 achievements
         // Check if each condition is met; if so, unlock the corresponding achievement.
         int m10 = 10;
         int m25 = 25;
@@ -359,6 +358,14 @@ public class MainActivity extends FragmentActivity implements
             achievementToast(getString(R.string.achievement_x_apple_toast_text, m10));
         }
 
+        if (finalScore == 0){
+            switch (mLevel){
+                case EASY: mOutbox.m100x0ApplesEasyAchievement += 1; break;
+                case MEDIUM: mOutbox.m100x0ApplesMediumAchievement += 1; break;
+                case HARD: mOutbox.m100x0ApplesHardAchievement += 1; break;
+            }
+        }
+
         if (    p10board(GameFragment.snakeGame.snake.getLength(),
                 GameFragment.snakeGame.getBoard().length,
                 GameFragment.snakeGame.getBoard()[0].length))   {
@@ -396,6 +403,62 @@ public class MainActivity extends FragmentActivity implements
         if (mOutbox.m10AppleHardAchievement) {
             mAchievementsClient.unlock(getString(R.string.achievement_10_apples_hard_mode));
             mOutbox.m10AppleHardAchievement = false;
+        }
+        if (mOutbox.m25AppleEasyAchievement) {
+            mAchievementsClient.unlock(getString(R.string.achievement_25_apples_easy_mode));
+            mOutbox.m25AppleEasyAchievement = false;
+        }
+        if (mOutbox.m25AppleMediumAchievement) {
+            mAchievementsClient.unlock(getString(R.string.achievement_25_apples_medium_mode));
+            mOutbox.m25AppleMediumAchievement = false;
+        }
+        if (mOutbox.m25AppleHardAchievement) {
+            mAchievementsClient.unlock(getString(R.string.achievement_25_apples_hard_mode));
+            mOutbox.m25AppleHardAchievement = false;
+        }
+        if (mOutbox.m50AppleEasyAchievement) {
+            mAchievementsClient.unlock(getString(R.string.achievement_50_apples_easy_mode));
+            mOutbox.m50AppleEasyAchievement = false;
+        }
+        if (mOutbox.m50AppleMediumAchievement) {
+            mAchievementsClient.unlock(getString(R.string.achievement_50_apples_medium_mode));
+            mOutbox.m50AppleMediumAchievement = false;
+        }
+        if (mOutbox.m50AppleHardAchievement) {
+            mAchievementsClient.unlock(getString(R.string.achievement_50_apples_hard_mode));
+            mOutbox.m50AppleHardAchievement = false;
+        }
+        if (mOutbox.m100AppleEasyAchievement) {
+            mAchievementsClient.unlock(getString(R.string.achievement_100_apples_easy_mode));
+            mOutbox.m100AppleEasyAchievement = false;
+        }
+        if (mOutbox.m100AppleMediumAchievement) {
+            mAchievementsClient.unlock(getString(R.string.achievement_100_apples_medium_mode));
+            mOutbox.m100AppleMediumAchievement = false;
+        }
+        if (mOutbox.m100AppleHardAchievement) {
+            mAchievementsClient.unlock(getString(R.string.achievement_100_apples_hard_mode));
+            mOutbox.m100AppleHardAchievement = false;
+        }
+        if (mOutbox.m42AppleAchievement) {
+            mAchievementsClient.unlock(getString(R.string.achievement_42_apples));
+            mOutbox.m42AppleAchievement = false;
+        }
+        if (mOutbox.m69AppleAchievement) {
+            mAchievementsClient.unlock(getString(R.string.achievement_69_apples));
+            mOutbox.m69AppleAchievement = false;
+        }
+        if (mOutbox.m100x0ApplesEasyAchievement >= 1) {
+            mAchievementsClient.increment(getString(R.string.achievement_100x_0_apples_easy_mode),1);
+            mOutbox.m100x0ApplesEasyAchievement = 0;
+        }
+        if (mOutbox.m100x0ApplesMediumAchievement >= 1) {
+            mAchievementsClient.increment(getString(R.string.achievement_100x_0_apples_medium_mode),1);
+            mOutbox.m100x0ApplesMediumAchievement = 0;
+        }
+        if (mOutbox.m100x0ApplesHardAchievement >= 1) {
+            mAchievementsClient.increment(getString(R.string.achievement_100x_0_apples_hard_mode),1);
+            mOutbox.m100x0ApplesHardAchievement = 0;
         }
         if (mOutbox.p10BoardEasy) {
             mAchievementsClient.unlock(getString(R.string.achievement_10_of_the_game_board_filled_in_easy_mode));
@@ -649,9 +712,9 @@ public class MainActivity extends FragmentActivity implements
         boolean m100AppleHardAchievement = false;
         boolean m42AppleAchievement = false;
         boolean m69AppleAchievement = false;
-        boolean m100x0AppleEasyAchievement = false;
-        boolean m100x0AppleMediumAchievement = false;
-        boolean m100x0AppleHardAchievement = false;
+        int m100x0ApplesEasyAchievement = 0;
+        int m100x0ApplesMediumAchievement = 0;
+        int m100x0ApplesHardAchievement = 0;
         boolean p10BoardEasy = false;
         boolean p10BoardMedium = false;
         boolean p10BoardHard = false;
@@ -678,9 +741,9 @@ public class MainActivity extends FragmentActivity implements
             out = out && !m100AppleHardAchievement;
             out = out && !m42AppleAchievement;
             out = out && !m69AppleAchievement;
-            out = out && !m100x0AppleEasyAchievement;
-            out = out && !m100x0AppleMediumAchievement;
-            out = out && !m100x0AppleHardAchievement;
+            out = out && m100x0ApplesEasyAchievement == 0;
+            out = out && m100x0ApplesMediumAchievement == 0;
+            out = out && m100x0ApplesHardAchievement == 0;
             out = out && !p10BoardEasy;
             out = out && !p10BoardMedium;
             out = out && !p10BoardHard;
