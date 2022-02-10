@@ -11,7 +11,7 @@ public class Filters implements InputFilter {
     enum Type{CHANCE, NUMBER}
     Pattern mPattern;
     public Filters(Type type) {
-        String regex = "";
+        String regex;
         switch (type){
             case CHANCE: regex = "^[2-9]([0-9]{0,2})$"; break;
             case NUMBER: regex = "^\\d{0,2}$"; break;
@@ -21,7 +21,7 @@ public class Filters implements InputFilter {
     }
 
     @Override
-    public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+    public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dStart, int dEnd) {
         Matcher matcher=mPattern.matcher(dest.toString()+source);
         if(!matcher.matches())
             return "";

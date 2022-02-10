@@ -29,6 +29,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
+@SuppressWarnings("ALL")
 public class MainActivity extends FragmentActivity implements
         MainMenuFragment.Listener,
         EndFragment.Listener,
@@ -393,112 +394,112 @@ public class MainActivity extends FragmentActivity implements
             return;
         }
         if (mOutbox.m10AppleEasyAchievement) {
-            mAchievementsClient.unlock(getString(R.string.achievement_10_apples_easy_mode));
+            mAchievementsClient.unlockImmediate(getString(R.string.achievement_10_apples_easy_mode));
             mOutbox.m10AppleEasyAchievement = false;
         }
         if (mOutbox.m10AppleMediumAchievement) {
-            mAchievementsClient.unlock(getString(R.string.achievement_10_apples_medium_mode));
+            mAchievementsClient.unlockImmediate(getString(R.string.achievement_10_apples_medium_mode));
             mOutbox.m10AppleMediumAchievement = false;
         }
         if (mOutbox.m10AppleHardAchievement) {
-            mAchievementsClient.unlock(getString(R.string.achievement_10_apples_hard_mode));
+            mAchievementsClient.unlockImmediate(getString(R.string.achievement_10_apples_hard_mode));
             mOutbox.m10AppleHardAchievement = false;
         }
         if (mOutbox.m25AppleEasyAchievement) {
-            mAchievementsClient.unlock(getString(R.string.achievement_25_apples_easy_mode));
+            mAchievementsClient.unlockImmediate(getString(R.string.achievement_25_apples_easy_mode));
             mOutbox.m25AppleEasyAchievement = false;
         }
         if (mOutbox.m25AppleMediumAchievement) {
-            mAchievementsClient.unlock(getString(R.string.achievement_25_apples_medium_mode));
+            mAchievementsClient.unlockImmediate(getString(R.string.achievement_25_apples_medium_mode));
             mOutbox.m25AppleMediumAchievement = false;
         }
         if (mOutbox.m25AppleHardAchievement) {
-            mAchievementsClient.unlock(getString(R.string.achievement_25_apples_hard_mode));
+            mAchievementsClient.unlockImmediate(getString(R.string.achievement_25_apples_hard_mode));
             mOutbox.m25AppleHardAchievement = false;
         }
         if (mOutbox.m50AppleEasyAchievement) {
-            mAchievementsClient.unlock(getString(R.string.achievement_50_apples_easy_mode));
+            mAchievementsClient.unlockImmediate(getString(R.string.achievement_50_apples_easy_mode));
             mOutbox.m50AppleEasyAchievement = false;
         }
         if (mOutbox.m50AppleMediumAchievement) {
-            mAchievementsClient.unlock(getString(R.string.achievement_50_apples_medium_mode));
+            mAchievementsClient.unlockImmediate(getString(R.string.achievement_50_apples_medium_mode));
             mOutbox.m50AppleMediumAchievement = false;
         }
         if (mOutbox.m50AppleHardAchievement) {
-            mAchievementsClient.unlock(getString(R.string.achievement_50_apples_hard_mode));
+            mAchievementsClient.unlockImmediate(getString(R.string.achievement_50_apples_hard_mode));
             mOutbox.m50AppleHardAchievement = false;
         }
         if (mOutbox.m100AppleEasyAchievement) {
-            mAchievementsClient.unlock(getString(R.string.achievement_100_apples_easy_mode));
+            mAchievementsClient.unlockImmediate(getString(R.string.achievement_100_apples_easy_mode));
             mOutbox.m100AppleEasyAchievement = false;
         }
         if (mOutbox.m100AppleMediumAchievement) {
-            mAchievementsClient.unlock(getString(R.string.achievement_100_apples_medium_mode));
+            mAchievementsClient.unlockImmediate(getString(R.string.achievement_100_apples_medium_mode));
             mOutbox.m100AppleMediumAchievement = false;
         }
         if (mOutbox.m100AppleHardAchievement) {
-            mAchievementsClient.unlock(getString(R.string.achievement_100_apples_hard_mode));
+            mAchievementsClient.unlockImmediate(getString(R.string.achievement_100_apples_hard_mode));
             mOutbox.m100AppleHardAchievement = false;
         }
         if (mOutbox.m42AppleAchievement) {
-            mAchievementsClient.unlock(getString(R.string.achievement_42_apples));
+            mAchievementsClient.unlockImmediate(getString(R.string.achievement_42_apples));
             mOutbox.m42AppleAchievement = false;
         }
         if (mOutbox.m69AppleAchievement) {
-            mAchievementsClient.unlock(getString(R.string.achievement_69_apples));
+            mAchievementsClient.unlockImmediate(getString(R.string.achievement_69_apples));
             mOutbox.m69AppleAchievement = false;
         }
         if (mOutbox.m100x0ApplesEasyAchievement >= 1) {
-            mAchievementsClient.increment(getString(R.string.achievement_100x_0_apples_easy_mode),1);
+            mAchievementsClient.incrementImmediate(getString(R.string.achievement_100x_0_apples_easy_mode),1);
             mOutbox.m100x0ApplesEasyAchievement = 0;
         }
         if (mOutbox.m100x0ApplesMediumAchievement >= 1) {
-            mAchievementsClient.increment(getString(R.string.achievement_100x_0_apples_medium_mode),1);
+            mAchievementsClient.incrementImmediate(getString(R.string.achievement_100x_0_apples_medium_mode),1);
             mOutbox.m100x0ApplesMediumAchievement = 0;
         }
         if (mOutbox.m100x0ApplesHardAchievement >= 1) {
-            mAchievementsClient.increment(getString(R.string.achievement_100x_0_apples_hard_mode),1);
+            mAchievementsClient.incrementImmediate(getString(R.string.achievement_100x_0_apples_hard_mode),1);
             mOutbox.m100x0ApplesHardAchievement = 0;
         }
         if (mOutbox.p10BoardEasy) {
-            mAchievementsClient.unlock(getString(R.string.achievement_10_of_the_game_board_filled_in_easy_mode));
+            mAchievementsClient.unlockImmediate(getString(R.string.achievement_10_of_the_game_board_filled_in_easy_mode));
             mOutbox.p10BoardEasy = false;
         }
         if (mOutbox.p10BoardMedium) {
-            mAchievementsClient.unlock(getString(R.string.achievement_10_of_the_game_board_filled_in_medium_mode));
+            mAchievementsClient.unlockImmediate(getString(R.string.achievement_10_of_the_game_board_filled_in_medium_mode));
             mOutbox.p10BoardMedium = false;
         }
         if (mOutbox.p10BoardHard) {
-            mAchievementsClient.unlock(getString(R.string.achievement_10_of_the_game_board_filled_in_hard_mode));
+            mAchievementsClient.unlockImmediate(getString(R.string.achievement_10_of_the_game_board_filled_in_hard_mode));
             mOutbox.p10BoardHard = false;
         }
         if (mOutbox.mEasyModeScore >= 0) {
-            mLeaderboardsClient.submitScore(getString(R.string.leaderboard_easy_high_scores),
+            mLeaderboardsClient.submitScoreImmediate(getString(R.string.leaderboard_easy_high_scores),
                     mOutbox.mEasyModeScore);
             mOutbox.mEasyModeScore = -1;
         }
         if (mOutbox.mMediumModeScore >= 0) {
-            mLeaderboardsClient.submitScore(getString(R.string.leaderboard_medium_high_scores),
+            mLeaderboardsClient.submitScoreImmediate(getString(R.string.leaderboard_medium_high_scores),
                     mOutbox.mMediumModeScore);
             mOutbox.mMediumModeScore = -1;
         }
         if (mOutbox.mHardModeScore >= 0) {
-            mLeaderboardsClient.submitScore(getString(R.string.leaderboard_hard_high_scores),
+            mLeaderboardsClient.submitScoreImmediate(getString(R.string.leaderboard_hard_high_scores),
                     mOutbox.mHardModeScore);
             mOutbox.mHardModeScore = -1;
         }
         if (mOutbox.mEasyModePerformance >= 0) {
-            mLeaderboardsClient.submitScore(getString(R.string.leaderboard_easy_performance),
+            mLeaderboardsClient.submitScoreImmediate(getString(R.string.leaderboard_easy_performance),
                     mOutbox.mEasyModePerformance);
             mOutbox.mEasyModePerformance = -1;
         }
         if (mOutbox.mMediumModePerformance >= 0) {
-            mLeaderboardsClient.submitScore(getString(R.string.leaderboard_medium_performance),
+            mLeaderboardsClient.submitScoreImmediate(getString(R.string.leaderboard_medium_performance),
                     mOutbox.mMediumModePerformance);
             mOutbox.mMediumModePerformance = -1;
         }
         if (mOutbox.mHardModePerformance >= 0) {
-            mLeaderboardsClient.submitScore(getString(R.string.leaderboard_hard_performance),
+            mLeaderboardsClient.submitScoreImmediate(getString(R.string.leaderboard_hard_performance),
                     mOutbox.mHardModePerformance);
             mOutbox.mHardModePerformance = -1;
         }
