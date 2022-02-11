@@ -50,7 +50,7 @@ public class MainActivity extends FragmentActivity implements
     // Client variables
     private AchievementsClient mAchievementsClient;
     private LeaderboardsClient mLeaderboardsClient;
-    private EventsClient mEventsClient;
+    public EventsClient mEventsClient;
     private PlayersClient mPlayersClient;
 
     // request codes we use when invoking an external activity
@@ -330,27 +330,32 @@ public class MainActivity extends FragmentActivity implements
                 case HARD: mOutbox.m100AppleHardAchievement = true; break;
             }
             achievementToast(getString(R.string.achievement_x_apple_toast_text, m100));
-        } else if (upNbrApple(finalScore, m69)){
+        }
+        if (upNbrApple(finalScore, m69)){
             mOutbox.m69AppleAchievement = true;
             achievementToast(getString(R.string.achievement_x_apple_toast_text, m69));
-        } else if (upNbrApple(finalScore, m50)){
+        }
+        if (upNbrApple(finalScore, m50)){
             switch (mLevel){
                 case EASY: mOutbox.m50AppleEasyAchievement = true; break;
                 case MEDIUM: mOutbox.m50AppleMediumAchievement = true; break;
                 case HARD: mOutbox.m50AppleHardAchievement = true; break;
             }
             achievementToast(getString(R.string.achievement_x_apple_toast_text, m50));
-        } else if (upNbrApple(finalScore, m42)){
+        }
+        if (upNbrApple(finalScore, m42)){
             mOutbox.m42AppleAchievement = true;
             achievementToast(getString(R.string.achievement_x_apple_toast_text, m42));
-        } else if (upNbrApple(finalScore, m25)){
+        }
+        if (upNbrApple(finalScore, m25)){
             switch (mLevel){
                 case EASY: mOutbox.m25AppleEasyAchievement = true; break;
                 case MEDIUM: mOutbox.m25AppleMediumAchievement = true; break;
                 case HARD: mOutbox.m25AppleHardAchievement = true; break;
             }
             achievementToast(getString(R.string.achievement_x_apple_toast_text, m25));
-        } else if (upNbrApple(finalScore, m10)) {
+        }
+        if (upNbrApple(finalScore, m10)) {
             switch (mLevel){
                 case EASY: mOutbox.m10AppleEasyAchievement = true; break;
                 case MEDIUM: mOutbox.m10AppleMediumAchievement = true; break;
@@ -392,6 +397,9 @@ public class MainActivity extends FragmentActivity implements
         if (isNotSignedIn()) {
             // can't push to the cloud, try again later
             return;
+        }
+        if(Settings.konami){
+            mEventsClient.increment(getString(R.string.event_konami_mode_game_played), 1);
         }
         if (mOutbox.m10AppleEasyAchievement) {
             mAchievementsClient.unlockImmediate(getString(R.string.achievement_10_apples_easy_mode));

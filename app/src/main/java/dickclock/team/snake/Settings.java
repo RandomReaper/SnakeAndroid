@@ -66,6 +66,7 @@ public class Settings extends MainActivity {
                     konamiList[7] == Interface.direction.RIGHT){
                     konami = true;
                     Log.i(MainActivity.TAG, "KONAMI!!");
+                    //MainActivity.instance.mEventsClient.increment(instance.getString(R.string.event_konami_mode_game_played), 1);
                     Toast.makeText(MainActivity.instance.getBaseContext(), "KONAMI !!", Toast.LENGTH_LONG).show();
                     Settings.head = Color.GREEN;
                 } else {

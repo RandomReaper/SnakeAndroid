@@ -45,6 +45,8 @@
     <string name="achievement_10_of_the_game_board_filled_in_medium_mode" translatable="false">CgkI7raapvgDEAIQDg</string>
     <!--achievement 10% of the game board filled in hard mode-->
     <string name="achievement_10_of_the_game_board_filled_in_hard_mode" translatable="false">CgkI7raapvgDEAIQDw</string>
+    <!--event Konami mode game played-->
+    <string name="event_konami_mode_game_played" translatable="false">CgkI7raapvgDEAIQHg</string>
     <!--leaderboard Easy High Scores-->
     <string name="leaderboard_easy_high_scores" translatable="false">CgkI7raapvgDEAIQBQ</string>
     <!--leaderboard Medium High Scores-->
