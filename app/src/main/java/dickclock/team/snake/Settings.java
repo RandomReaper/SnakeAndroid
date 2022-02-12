@@ -1,8 +1,11 @@
 package dickclock.team.snake;
 
 import android.graphics.Color;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 /**
  * Just a class for keep all settings in same place
@@ -66,8 +69,11 @@ public class Settings extends MainActivity {
                     konamiList[7] == Interface.direction.RIGHT){
                     konami = true;
                     Log.i(MainActivity.TAG, "KONAMI!!");
-                    //MainActivity.instance.mEventsClient.increment(instance.getString(R.string.event_konami_mode_game_played), 1);
                     Toast.makeText(MainActivity.instance.getBaseContext(), "KONAMI !!", Toast.LENGTH_LONG).show();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "KONAMI");
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "KONAMI");
+                    MainActivity.instance.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT,bundle);
                     Settings.head = Color.GREEN;
                 } else {
                     nbrDirOnList = 0;

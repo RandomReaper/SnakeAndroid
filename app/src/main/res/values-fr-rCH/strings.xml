@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Snake</string>
+    <string name="signed_out_greeting">
+        Hello joueur anonyme !\n
+        (pas encore enregistré)
+    </string>
+    <string name="achievements_exception">Il y a eu un problème de coommunication avec les réussites</string>
+    <string name="leaderboards_exception">Il y a eu un problème de coommunication avec les tableaux des scores</string>
+    <string name="players_exception">Il y a eu un problème de coommunication avec les joueurs</string>
+    <string name="status_exception_error">%1$s (status %2$d). %3$s.</string>
+    <string name="easy_mode_explanation">C\'était facile ;)</string>
+    <string name="medium_mode_explanation">Pas si facile, n\'est-ce pas ?</string>
+    <string name="hard_mode_explanation">C\'était plutôt difficile, n\'est-ce pas ?</string>
+    <string name="achievement_x_apple_toast_text">Manger %1$d pommes en une partie</string>
+    <string name="achievement_p10_board_toast_text">Votre serpent à rempli 1\'% de tout le plateau de jeu</string>
+    <string name="achievement">Réussites</string>
+    <string name="your_progress_will_be_uploaded">Vos réussites et scores existant vont être uploadé prochainement.</string>
+    <string name="choose_difficulty">Choissisez une difficulté pour jouer</string>
+    <string name="easy">Facile</string>
+    <string name="medium">Moyen</string>
+    <string name="hard">Difficile</string>
+    <string name="settings">Paramètres</string>
+    <string name="see_your_progress">Voir votre progrès</string>
+    <string name="show_achievements">Voir vos réussites</string>
+    <string name="show_leaderboards">Voir les tableaux des scores</string>
+    <string name="show_friends">Voir vos amis</string>
+    <string name="sign_in_why">Connectez vous avec Google et partager vos scores et réussites avec vos amis.</string>
+    <string name="you_are_signed_in">Vous êtes connecté avec Google</string>
+    <string name="sign_out">Déconnecté</string>
+    <string name="you_win">Vous avez perdu ! Votre score est de :</string>
+    <string name="ok">OK</string>
+    <string name="sign_in_to_upload_this_score">Connectez-vous maintenant et uploadez ce score, enregistré vos réussites et partagez les avec vos amis</string>
+    <string name="signin_other_error">Il y a eu un problème de connexion. Veuillez réessayer plus tard</string>
+    <string name="friends_title">Amis</string>
+    <string name="back">Retour</string>
+    <string name="colorBorder">Coulteur de la bordure</string>
+    <string name="colorGrid">Couleur de la grille</string>
+    <string name="colorHead">Couleur de la tête</string>
+    <string name="colorBody">Couleur du corps</string>
+    <string name="colorBackground">Couleur du fond</string>
+    <string name="hasBorder">Bordure</string>
+    <string name="hasGrid">Grille</string>
+    <string name="sensitivity">Sensibilité</string>
+    <string name="fruits_chance">Chance pour les bananes: 1/</string>
+    <string name="defaultChanceForBanana">0</string>
+    <string name="number_fruits">
+        Nombre de fruits\n
+        en jeu
+    </string>
+    <string name="fun_mode">
+        Fun mode\n
+        Si vous changez les réglages, vos scores ne seront pas sauvegardé.
+    </string>
+    <string name="defaultNumberOfFruits">1</string>
+    <string name="reset_fun_mode">Reset</string>
+    <string name="friends_icon">Icon d\'amis</string>
+</resources>

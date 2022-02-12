@@ -25,11 +25,15 @@ import com.google.android.gms.games.PlayersClient;
 import com.google.android.gms.games.event.Event;
 import com.google.android.gms.games.event.EventBuffer;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
-@SuppressWarnings("ALL")
 public class MainActivity extends FragmentActivity implements
         MainMenuFragment.Listener,
         EndFragment.Listener,
@@ -91,12 +95,20 @@ public class MainActivity extends FragmentActivity implements
     public static SharedPreferences settings;
     public static SharedPreferences.Editor editorSettings;
 
+    //FireBase
+    public FirebaseAnalytics mFirebaseAnalytics;
+    private FirebaseAuth mAuth;
+
     private boolean end = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         instance = this;
         super.onCreate(savedInstanceState);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        mAuth = FirebaseAuth.getInstance();
+
 
         settings = getSharedPreferences("settings", 0);
         editorSettings = settings.edit();
@@ -134,6 +146,19 @@ public class MainActivity extends FragmentActivity implements
             magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         }
         Log.i(MainActivity.TAG, Settings.gravitySensor ? "GravitySensorOn" : "WithoutGravitySensor");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);
+
+    }
+
+    private void updateUI(FirebaseUser user){
+
     }
 
     private void loadAndPrintEvents() {
@@ -288,6 +313,12 @@ public class MainActivity extends FragmentActivity implements
 
         if (!Settings.funModeOn) {
 
+            mEventsClient.increment(getString(R.string.event_apples_eat_in_total), score);
+            Bundle bundle = new Bundle();
+            bundle.putDouble(FirebaseAnalytics.Param.VALUE, score);
+            bundle.putString(FirebaseAnalytics.Param.VIRTUAL_CURRENCY_NAME, "apple(s)");
+            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.EARN_VIRTUAL_CURRENCY, bundle);
+
             // check for achievements
             checkForAchievements(score);
 
@@ -399,7 +430,7 @@ public class MainActivity extends FragmentActivity implements
             return;
         }
         if(Settings.konami){
-            mEventsClient.increment(getString(R.string.event_konami_mode_game_played), 1);
+            mEventsClient.increment(getString(R.string.event_konami_mode_games_played), 1);
         }
         if (mOutbox.m10AppleEasyAchievement) {
             mAchievementsClient.unlockImmediate(getString(R.string.achievement_10_apples_easy_mode));
