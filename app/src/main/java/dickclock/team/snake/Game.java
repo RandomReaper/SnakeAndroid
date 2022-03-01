@@ -140,7 +140,6 @@ public class Game {
         // if game is finish, reset the number of fruit and the direction
         if(!inProgress){
             fruit.reset();
-            Interface.nextDir = Interface.direction.NOCHANGE;
             previousDirection = Interface.direction.RIGHT;
         }
     }

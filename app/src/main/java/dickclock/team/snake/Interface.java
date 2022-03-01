@@ -18,7 +18,7 @@ public class Interface {
         NOCHANGE
     }
 
-    public static direction nextDir; // Define nextDirection
+    public direction nextDir; // Define nextDirection
 
     /**
      * Get next direction with orientation on phone
@@ -55,7 +55,7 @@ public class Interface {
         }
         return nextDir;
     }
-    
+
     /**
      * Put the score on terminal (should be used at the end of the game)
      * @param score The score to be put on terminal

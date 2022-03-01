@@ -731,6 +731,7 @@ public class MainActivity extends FragmentActivity implements
                     int score = GameFragment.snakeGame.getScore();
                     switchToFragment(mEndFragment);
                     iface.putScoreTerminal(score);
+                    iface.nextDir = Interface.direction.NOCHANGE;
                     onEnteredScore(score);
                 }
             } catch (Exception ignored) {}
