@@ -116,7 +116,7 @@ public class GameView extends View {
                     // Special Konami code
                     if (Settings.konami) {
                         if (board[y][x] >= 1) {
-                            int snakeLength = GameFragment.snakeGame.snake.getLength();
+                            int snakeLength = GameFragment.snakeGame.getLength();
                             int boardValue = board[y][x];
                             @SuppressLint("DrawAllocation") int[] rainbowValue = new int[snakeLength];
                             for (int i = 0; i < rainbowValue.length; i++) {

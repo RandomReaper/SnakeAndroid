@@ -86,15 +86,6 @@ public class Snake {
     public void growUp(int n){ length += Math.abs(n); }
 
     /**
-     * Get position of head of snake
-     * @param board the current board of game
-     * @return the position of the head [0] is X and [1] is Y
-     */
-    public int[] getHead(int[][] board){
-        return Game.positionInBoard(board, 1);
-    }
-
-    /**
      * Just get the length of the snake
      * @return the length of the snake
      */

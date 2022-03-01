@@ -14,7 +14,8 @@ public class Game {
     private final int width;
     private boolean inProgress; // if the game is on progress or is finish
     private int[][] board; // the current board of game
-    public Snake snake; // the snake for the game
+    private Snake snake; // the snake for the game
+    private Fruit fruit;
     private Interface.direction previousDirection = Interface.direction.RIGHT; // previous direction
 
     /**
@@ -26,7 +27,6 @@ public class Game {
     public Game(int height, int width) {
         this.height = height;
         this.width = width;
-
     }
 
     /**
@@ -82,8 +82,8 @@ public class Game {
             previousDirection = dir;
 
         // Check where is the head of snake at the beginning of the round
-        int headX = snake.getHead(board)[0];
-        int headY = snake.getHead(board)[1];
+        int headX = positionInBoard(1)[0];
+        int headY = positionInBoard(1)[1];
 
         // Change place of head for next round depend to the direction.
         if (dir == Interface.direction.UP) {
@@ -121,16 +121,16 @@ public class Game {
             } else {
 
                 // Check if a fruit is on place to the next position of the head of snake and makes the snake grow if yes
-                if (Fruit.isFruit(board[headY][headX])) {
-                    snake.growUp(Fruit.eatFruit(board[headY][headX]));
+                if (fruit.isFruit(board[headY][headX])) {
+                    snake.growUp(fruit.eatFruit(board[headY][headX]));
                 }
 
                 // Place the new snake on the board
                 board = snake.placeSnake(board, returnPositionXY(headX, headY));
 
                 // Create a Fruit if not enough fruit(s) exist
-                if (Fruit.getNumberOfFruit() < NUMBEROFFRUIT) {
-                    board = Fruit.createFruit(board);
+                if (fruit.getNumberOfFruit() < NUMBEROFFRUIT) {
+                    board = fruit.createFruit(board);
                 }
             }
         } else {
@@ -139,7 +139,7 @@ public class Game {
 
         // if game is finish, reset the number of fruit and the direction
         if(!this.inProgress){
-            Fruit.reset();
+            fruit.reset();
             Interface.nextDir = Interface.direction.NOCHANGE;
             previousDirection = Interface.direction.RIGHT;
         }
@@ -170,7 +170,7 @@ public class Game {
      * @return the position of the value [0] is X and [1] is Y.
      *         return null if the value isn't found
      */
-    public static int[] positionInBoard(int[][] board, int val) {
+    public int[] positionInBoard(int val) {
         for (int y = 0; y < board.length; y++) {
             for (int x = 0; x < board[0].length; x++) {
                 if (board[y][x] == val) {
@@ -188,10 +188,14 @@ public class Game {
      * @param posY integer for position in Y
      * @return the position of the value [0] is X and [1] is Y.
      */
-    public static int[] returnPositionXY(int posX, int posY) {
+    public int[] returnPositionXY(int posX, int posY) {
         int[] positionXY = new int[2];
         positionXY[0] = posX;
         positionXY[1] = posY;
         return positionXY;
+    }
+
+    public int getLength() {
+        return snake.getLength();
     }
 }

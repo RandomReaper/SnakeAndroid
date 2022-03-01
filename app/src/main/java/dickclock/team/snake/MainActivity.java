@@ -403,7 +403,7 @@ public class MainActivity extends FragmentActivity implements
             }
         }
 
-        if (    p10board(GameFragment.snakeGame.snake.getLength(),
+        if (    p10board(GameFragment.snakeGame.getLength(),
                 GameFragment.snakeGame.getBoard().length,
                 GameFragment.snakeGame.getBoard()[0].length))   {
             switch (mLevel){

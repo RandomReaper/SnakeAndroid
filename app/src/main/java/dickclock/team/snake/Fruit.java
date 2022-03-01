@@ -6,14 +6,14 @@ public class Fruit {
 
     public final static int VALUEFORAPPLE = -1;
     public final static int VALUEFORBANANA = -2;
-    private static int numberOfFruit = 0;
+    private int numberOfFruit = 0;
 
     /**
      * Create and place an Apple on the board game
      * @param board The initial board game
      * @return The new board game
      */
-    static public int[][] createFruit(int[][] board){
+    public int[][] createFruit(int[][] board){
         int randomX;
         int randomY;
         do {
@@ -30,7 +30,7 @@ public class Fruit {
      * @param f The value to be tested
      * @return true if the value is a fruit and false if is not
      */
-    static public boolean isFruit(int f){
+    public boolean isFruit(int f){
         return f < 0;
     }
 
@@ -39,7 +39,7 @@ public class Fruit {
      * @param f the value of the fruit (the real value on the board)
      * @return the positive value of this fruit
      */
-    static public int eatFruit(int f){
+    public int eatFruit(int f){
         numberOfFruit--;
         return Math.abs(f);
     }
@@ -48,14 +48,14 @@ public class Fruit {
      * Get the number of fruit on the board
      * @return the number of fruit on the board
      */
-    static public int getNumberOfFruit(){
+    public int getNumberOfFruit(){
         return numberOfFruit;
     }
 
     /**
      * Just reset the number of fruit. For the end of the game
      */
-    static public void reset() {
+    public void reset() {
         numberOfFruit = 0;
     }
 
@@ -63,7 +63,7 @@ public class Fruit {
      * Generate a random fruit
      * @return return the random fruit
      */
-    private static int chooseFruit(){
+    private int chooseFruit(){
         switch (new Random().nextInt(Settings.fruitsChance)) {
             case 1:
                 return VALUEFORBANANA;
