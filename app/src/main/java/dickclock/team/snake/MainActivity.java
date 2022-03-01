@@ -75,6 +75,7 @@ public class MainActivity extends FragmentActivity implements
     private final AccomplishmentsOutbox mOutbox = new AccomplishmentsOutbox();
 
     public static MainActivity instance;
+    private Interface iface = new Interface();
 
     // Sensors
     private static SensorManager sensorManager;
@@ -712,7 +713,7 @@ public class MainActivity extends FragmentActivity implements
         }
 
         if(play){
-            Settings.addKonami(Interface.getNextDir(x,y));
+            Settings.addKonami(iface.getNextDir(x,y));
             try {
                 if (GameFragment.snakeGame.isInProgress()){
                     end = false;
@@ -720,7 +721,7 @@ public class MainActivity extends FragmentActivity implements
                     long time = currentTime.getTime();
                     if((time-previousTime) >= Settings.getTime(mLevel)){
                         previousTime = time;
-                        GameFragment.playOneRound(Interface.getNextDir(x,y));
+                        GameFragment.playOneRound(iface.getNextDir(x,y));
                     }
 
                 } else if (!end){
@@ -729,7 +730,7 @@ public class MainActivity extends FragmentActivity implements
                     GameFragment.drawingView.invalidate();
                     int score = GameFragment.snakeGame.getScore();
                     switchToFragment(mEndFragment);
-                    Interface.putScoreTerminal(score);
+                    iface.putScoreTerminal(score);
                     onEnteredScore(score);
                 }
             } catch (Exception ignored) {}

@@ -27,14 +27,14 @@ public class Game {
     public Game(int h, int w) {
         height = h;
         width = w;
-        Initialization();
+        initialization();
     }
 
     /**
      * Initialize the game.
      * Create the board with the specific size and include the snake
      */
-    private void Initialization(){
+    private void initialization(){
 
         // define the game is on progress
         inProgress = true;

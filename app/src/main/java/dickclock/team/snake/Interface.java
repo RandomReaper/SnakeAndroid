@@ -26,7 +26,7 @@ public class Interface {
      * @param y degrees in pitch axis
      * @return next direction
      */
-    public static direction getNextDir(int x, int y){
+    public direction getNextDir(int x, int y){
         int limit = (SettingsFragment.onSettingsView) ? Settings.konamiSensitivity : Settings.sensitivity;
         nextDir = direction.NOCHANGE;
 
@@ -55,15 +55,12 @@ public class Interface {
         }
         return nextDir;
     }
-
-
-
-
+    
     /**
      * Put the score on terminal (should be used at the end of the game)
      * @param score The score to be put on terminal
      */
-    public static void putScoreTerminal(int score) {
+    public void putScoreTerminal(int score) {
         Log.i(MainActivity.TAG,"Your score is: " + score);
     }
 
@@ -71,7 +68,7 @@ public class Interface {
      * Draw the board of the game on terminal
      * @param board the current board to be drawing
      */
-    public static void drawOnTerminal(int[][] board) {
+    public void drawOnTerminal(int[][] board) {
         String s = "Board: \n";
         for (int y = 0; y < board.length; y++) {
             for (int x = 0; x < board[0].length; x++) {
