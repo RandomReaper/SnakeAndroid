@@ -7,6 +7,7 @@ public class Fruit {
     public final static int VALUEFORAPPLE = -1;
     public final static int VALUEFORBANANA = -2;
     private int numberOfFruit = 0;
+    private Random random = new Random();
 
     /**
      * Create and place an Apple on the board game
@@ -17,8 +18,8 @@ public class Fruit {
         int randomX;
         int randomY;
         do {
-            randomX = new Random().nextInt(board[0].length); // generate an number between 0 and the width of the board
-            randomY = new Random().nextInt(board.length); // generate an number between 0 and the height of the board
+            randomX = random.nextInt(board[0].length); // generate an number between 0 and the width of the board
+            randomY = random.nextInt(board.length); // generate an number between 0 and the height of the board
         } while (board[randomY][randomX] != 0);
         board[randomY][randomX] = chooseFruit();
         numberOfFruit++;
@@ -64,7 +65,7 @@ public class Fruit {
      * @return return the random fruit
      */
     private int chooseFruit(){
-        switch (new Random().nextInt(Settings.fruitsChance)) {
+        switch (random.nextInt(Settings.fruitsChance)) {
             case 1:
                 return VALUEFORBANANA;
 
