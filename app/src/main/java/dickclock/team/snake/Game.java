@@ -21,12 +21,12 @@ public class Game {
     /**
      * Define size for board and create interface
      *
-     * @param height height of the board
-     * @param width  width of the board
+     * @param h height of the board
+     * @param w  width of the board
      */
-    public Game(int height, int width) {
-        this.height = height;
-        this.width = width;
+    public Game(int h, int w) {
+        height = h;
+        width = w;
     }
 
     /**
@@ -36,21 +36,21 @@ public class Game {
     public void Initialization(){
 
         // define the game is on progress
-        this.inProgress = true;
+        inProgress = true;
 
         // create a board for the game
-        this.board = new int[this.height][this.width];
+        board = new int[height][width];
 
         // Initialization the board with only 0
-        for (int y = 0; y < this.board.length; y++) {
-            for (int x = 0; x < this.board[0].length; x++) {
-                this.board[y][x] = 0;
+        for (int y = 0; y < board.length; y++) {
+            for (int x = 0; x < board[0].length; x++) {
+                board[y][x] = 0;
             }
         }
 
         // create and place the snake in the board
-        this.snake = new Snake(new XY(3, this.height / 2), 3, board);
-        this.board = this.snake.placeSnake(board);
+        snake = new Snake(new XY(3, height / 2), 3, board);
+        board = snake.placeSnake(board);
     }
 
     /**
@@ -59,7 +59,7 @@ public class Game {
      * @return Return true if the game is on progress and false if is not.
      */
     public boolean isInProgress() {
-        return this.inProgress;
+        return inProgress;
     }
 
     /**
@@ -115,7 +115,7 @@ public class Game {
                         }
                     }
                 } else {
-                    this.inProgress = false;
+                    inProgress = false;
                 }
             } else {
 
@@ -133,11 +133,11 @@ public class Game {
                 }
             }
         } else {
-            this.inProgress = false;
+            inProgress = false;
         }
 
         // if game is finish, reset the number of fruit and the direction
-        if(!this.inProgress){
+        if(!inProgress){
             fruit.reset();
             Interface.nextDir = Interface.direction.NOCHANGE;
             previousDirection = Interface.direction.RIGHT;

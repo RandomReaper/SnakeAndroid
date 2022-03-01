@@ -13,15 +13,14 @@ public class Snake {
     public int length; // current length of snake
 
     /**
-     * Create a Snake to position startX, startY for the head with the length of startLength
+     * Create a Snake to position s for the head with a start length of l
      *
-     * @param startX      Position X for the head at the beginning of this Snake
-     * @param startY      Position Y for the head at the beginning of this Snake
-     * @param startLength Length of the Snake at the beginning of this Snake
+     * @param s XY Position for the head at the beginning of this Snake
+     * @param l Length of the Snake at the beginning of this Snake
      */
-    public Snake(XY start, int startLength) {
-        this.startXY = start;
-        this.startLength = startLength;
+    public Snake(XY s, int l) {
+        startXY = s;
+        startLength = l;
         length = startLength;
     }
 
