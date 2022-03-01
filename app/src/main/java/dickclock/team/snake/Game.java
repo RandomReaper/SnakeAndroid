@@ -49,7 +49,7 @@ public class Game {
         }
 
         // create and place the snake in the board
-        this.snake = new Snake(3, this.height / 2, 3, board);
+        this.snake = new Snake(new XY(3, this.height / 2), 3, board);
         this.board = this.snake.placeSnake(board);
     }
 
@@ -82,34 +82,33 @@ public class Game {
             previousDirection = dir;
 
         // Check where is the head of snake at the beginning of the round
-        int headX = positionInBoard(1)[0];
-        int headY = positionInBoard(1)[1];
+        XY head = positionInBoard(1);
 
         // Change place of head for next round depend to the direction.
         if (dir == Interface.direction.UP) {
-            headY--;
+            head.y--;
         }
         if (dir == Interface.direction.LEFT) {
-            headX--;
+            head.x--;
         }
         if (dir == Interface.direction.DOWN) {
-            headY++;
+            head.y++;
         }
         if (dir == Interface.direction.RIGHT) {
-            headX++;
+            head.x++;
         }
 
         // Check if head is on the board and if not, continue the game
-        if (headY < board.length && headX < board[0].length && headX >= 0 && headY >= 0) {
+        if (head.y < board.length && head.x < board[0].length && head.x >= 0 && head.y >= 0) {
 
             // Check if head don't hit a part of body of snake and turn of the game if yes
-            if (board[headY][headX] > 0) {
+            if (board[head.y][head.x] > 0) {
                 /**
                  * Konami part is an add-on of the initial game for bonus
                  * @author Rémi Heredero
                  */
                 if (Settings.konami) {
-                    snake.length = board[headY][headX] - 1;
+                    snake.length = board[head.y][head.x] - 1;
                     for (int y = 0; y < board.length; y++) {
                         for (int x = 0; x < board[0].length; x++) {
                             if (board[y][x] >= snake.getLength()){ board[y][x] = 0; }
@@ -121,12 +120,12 @@ public class Game {
             } else {
 
                 // Check if a fruit is on place to the next position of the head of snake and makes the snake grow if yes
-                if (fruit.isFruit(board[headY][headX])) {
-                    snake.growUp(fruit.eatFruit(board[headY][headX]));
+                if (fruit.isFruit(board[head.y][head.x])) {
+                    snake.growUp(fruit.eatFruit(board[head.y][head.x]));
                 }
 
                 // Place the new snake on the board
-                board = snake.placeSnake(board, returnPositionXY(headX, headY));
+                board = snake.placeSnake(board, head);
 
                 // Create a Fruit if not enough fruit(s) exist
                 if (fruit.getNumberOfFruit() < NUMBEROFFRUIT) {
@@ -170,29 +169,15 @@ public class Game {
      * @return the position of the value [0] is X and [1] is Y.
      *         return null if the value isn't found
      */
-    public int[] positionInBoard(int val) {
+    public XY positionInBoard(int val) {
         for (int y = 0; y < board.length; y++) {
             for (int x = 0; x < board[0].length; x++) {
                 if (board[y][x] == val) {
-                    return returnPositionXY(x, y);
+                    return new XY(x, y);
                 }
             }
         }
         return null;
-    }
-
-    /**
-     * returns positionXY in the form in[2] with the integers X and Y as parameters
-     *
-     * @param posX integer for position in X
-     * @param posY integer for position in Y
-     * @return the position of the value [0] is X and [1] is Y.
-     */
-    public int[] returnPositionXY(int posX, int posY) {
-        int[] positionXY = new int[2];
-        positionXY[0] = posX;
-        positionXY[1] = posY;
-        return positionXY;
     }
 
     public int getLength() {
